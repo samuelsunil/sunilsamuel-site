@@ -1,9 +1,9 @@
 {
-  "version": "c0c8892c",
+  "version": "f03fc2a0",
   "entry": {
-    "module": "/build/entry.client-2J7QUANN.js",
+    "module": "/build/entry.client-WDFEN4F6.js",
     "imports": [
-      "/build/_shared/chunk-LAE5MDMM.js",
+      "/build/_shared/chunk-TJCOAVTI.js",
       "/build/_shared/chunk-E7VMOUYL.js"
     ]
   },
@@ -11,11 +11,11 @@
     "root": {
       "id": "root",
       "path": "",
-      "module": "/build/root-7NDWL5O4.js",
+      "module": "/build/root-3FGX3NCF.js",
       "hasAction": false,
       "hasLoader": false,
       "hasCatchBoundary": false,
-      "hasErrorBoundary": false
+      "hasErrorBoundary": true
     },
     "routes/index": {
       "id": "routes/index",
@@ -28,5 +28,5 @@
       "hasErrorBoundary": false
     }
   },
-  "url": "/build/manifest-C0C8892C.js"
+  "url": "/build/manifest-F03FC2A0.js"
 }
