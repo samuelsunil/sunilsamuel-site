@@ -1,9 +1,9 @@
 {
-  "version": "f03fc2a0",
+  "version": "7cb86af4",
   "entry": {
-    "module": "/build/entry.client-WDFEN4F6.js",
+    "module": "/build/entry.client-2SWIHCSZ.js",
     "imports": [
-      "/build/_shared/chunk-TJCOAVTI.js",
+      "/build/_shared/chunk-WWJ4RV5O.js",
       "/build/_shared/chunk-E7VMOUYL.js"
     ]
   },
@@ -11,10 +11,10 @@
     "root": {
       "id": "root",
       "path": "",
-      "module": "/build/root-3FGX3NCF.js",
+      "module": "/build/root-FGLADWGJ.js",
       "hasAction": false,
       "hasLoader": false,
-      "hasCatchBoundary": false,
+      "hasCatchBoundary": true,
       "hasErrorBoundary": true
     },
     "routes/index": {
@@ -28,5 +28,5 @@
       "hasErrorBoundary": false
     }
   },
-  "url": "/build/manifest-F03FC2A0.js"
+  "url": "/build/manifest-7CB86AF4.js"
 }
