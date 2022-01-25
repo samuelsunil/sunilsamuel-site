@@ -19,10 +19,10 @@ import {
   NonFlashOfWrongThemeEls,
   Theme,
 } from './utils/theme-provider'
-import tailwindStyles from '../styles/tailwind.css'
-import vendorStyles from '../styles/vendors.css'
-import appStyles from '../styles/app.css'
-import proseStyles from '../styles/prose.css'
+import tailwindStyles from '~/styles/tailwind.css'
+import vendorStyles from '~/styles/vendors.css'
+import appStyles from '~/styles/app.css'
+import proseStyles from '~/styles/prose.css'
 // import noScriptStyles from './styles/no-script.css'
 import {ErrorPage} from './components/errors'
 import type {Await, SVSHandle, User } from '~/types'
@@ -57,19 +57,19 @@ export const links: LinksFunction = () => {
       sizes: '180x180',
       href: '/favicons/apple-touch-icon.png',
     },
-    {
-      rel: 'icon',
-      type: 'image/png',
-      sizes: '32x32',
-      href: '/favicons/favicon-32x32.png',
-    },
-    {
-      rel: 'icon',
-      type: 'image/png',
-      sizes: '16x16',
-      href: '/favicons/favicon-16x16.png',
-    },
-    {rel: 'manifest', href: '/site.webmanifest'},
+    // {
+    //   rel: 'icon',
+    //   type: 'image/png',
+    //   sizes: '32x32',
+    //   href: '/favicons/favicon-32x32.png',
+    // },
+    // {
+    //   rel: 'icon',
+    //   type: 'image/png',
+    //   sizes: '16x16',
+    //   href: '/favicons/favicon-16x16.png',
+    // },
+    // {rel: 'manifest', href: '/site.webmanifest'},
     {rel: 'icon', href: '/favicon.ico'},
     {rel: 'stylesheet', href: vendorStyles},
     {rel: 'stylesheet', href: tailwindStyles},
@@ -84,7 +84,8 @@ export const meta: MetaFunction = () => {
 
 
 export  function App() {
-  const [theme] = useTheme()
+  const [theme] = useTheme();
+  console.log("*****************", theme)
   return (
     <html lang="en"   className={clsx(theme, `set-color-team-current-blue`)} >
       <head>
@@ -97,7 +98,7 @@ export  function App() {
           src="https://polyfill.io/v3/polyfill.min.js?features=Intl%2CIntl.ListFormat"
         />
       </head>
-      <body className="dark:bg-gray-900 bg-white transition duration-500">
+      <body className="dark:bg-gray-900 bg-dark transition duration-500">
         <Outlet />
         <Spacer size="base" />
         <ScrollRestoration />
