@@ -2,36 +2,136 @@ import * as React from 'react'
 import {
   Links,
   LiveReload,
+  LoaderFunction,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
   useCatch,
   useLocation,
+  json
 } from "remix";
+import {
+  getDisplayUrl,
+  getDomainUrl,
+  getUrl,
+  removeTrailingSlash,
+} from './utils/misc'
 import {Spacer} from './components/spacer'
 import type {LinksFunction, MetaFunction} from "remix";
 import clsx from 'clsx'
 import {
   useTheme,
   ThemeProvider,
+  // NonFlashOfWrongThemeEls,
+  Theme,
 } from './utils/theme-provider'
+import {getEnv} from './utils/env.server'
 import tailwindStyles from '~/styles/tailwind.css'
 import vendorStyles from '~/styles/vendors.css'
 import appStyles from '~/styles/app.css'
 import proseStyles from '~/styles/prose.css'
 // import noScriptStyles from './styles/no-script.css'
 import {ErrorPage} from './components/errors'
-import type {Await, SVSHandle, User } from '~/types'
+import {Navbar} from './components/navbar'
+import type { SVSHandle, } from '~/types'
 import {ArrowLink} from './components/arrow-button'
+import {getThemeSession} from './utils/theme.server'
 
 export const handle: SVSHandle & {id: string} = {
   id: 'root',
 }
-enum Theme {
-  DARK = 'dark',
-  LIGHT = 'light',
+
+
+export type LoaderData = {
+ // user: User | null
+  ENV: ReturnType<typeof getEnv>
+  requestInfo: {
+    origin: string
+    path: string
+    session: {
+      email: string | undefined
+      magicLinkVerified: boolean | undefined
+      theme: Theme | null
+    }
+  }
 }
+
+
+export const meta: MetaFunction = ({data}) => {
+  const requestInfo = (data as LoaderData | undefined)?.requestInfo
+  const title = 'Sunil Samuel'
+  const description =
+    'Come check out how Sunil Samuel can help you level up your career as a Software Engineer.'
+  return {
+    viewport: 'width=device-width,initial-scale=1,viewport-fit=cover',
+    'theme-color': '#A9ADC1',
+  }
+}
+
+
+
+
+export const loader: LoaderFunction = async ({request}) => {
+  // because this is called for every route, we'll do an early return for anything
+  // that has a other route setup. The response will be handled there.
+  // if (pathedRoutes[new URL(request.url).pathname]) {
+  //   return new Response()
+  // }
+
+  //const timings: Timings = {}
+  //const session = await getSession(request)
+  const themeSession = await getThemeSession(request)
+  //const clientSession = await getClientSession(request)
+  //const loginInfoSession = await getLoginInfoSession(request)
+
+  // const user = await time({
+  //   name: 'getUser in root loader',
+  //   type: 'postgres read',
+  //   timings,
+  //   fn: () => session.getUser(),
+  // })
+
+  // const randomFooterImageKeys = Object.keys(illustrationImages)
+  // const randomFooterImageKey = randomFooterImageKeys[
+  //   Math.floor(Math.random() * randomFooterImageKeys.length)
+  // ] as keyof typeof illustrationImages
+  const data: LoaderData = {
+    // user,
+    // userInfo: user
+    //   ? await time({
+    //       name: 'getUserInfo in root loader',
+    //       type: 'convertkit and discord read',
+    //       timings,
+    //       fn: () => getUserInfo(user, {request, timings}),
+    //     })
+    //   : null,
+    ENV: getEnv(),  
+    requestInfo: {
+      origin: getDomainUrl(request),
+      path: new URL(request.url).pathname,
+      session: {
+         email: 'sunilvsamuel@gmail.com', //loginInfoSession.getEmail(),
+         magicLinkVerified: undefined ,//loginInfoSession.getMagicLinkVerified(),
+        theme: themeSession.getTheme(),
+      },
+    },
+  }
+
+  const headers: HeadersInit = new Headers()
+  // headers.append('Server-Timing', getServerTimeHeader(timings))
+  // this can lead to race conditions if a child route is also trying to commit
+  // the cookie as well. This is a bug in remix that will hopefully be fixed.
+  // we reduce the likelihood of a problem by only committing if the value is
+  // different.
+  // await session.getHeaders(headers)
+  // await clientSession.getHeaders(headers)
+  // await loginInfoSession.getHeaders(headers)
+
+  return json(data, {headers})
+}
+
 
 export const links: LinksFunction = () => {
   return [
@@ -75,14 +175,11 @@ export const links: LinksFunction = () => {
   ]
 }
 
-export const meta: MetaFunction = () => {
-  return { title: "New Remix App" };
-};
 
 
 export  function App() {
   const [theme] = useTheme();
-  console.log("*****************", theme)
+
   return (
     <html lang="en"   className={clsx(theme, `set-color-team-current-blue`)} >
       <head>
@@ -96,6 +193,7 @@ export  function App() {
         />
       </head>
       <body className="dark:bg-gray-900 bg-dark transition duration-500">
+        <Navbar />
         <Outlet />
         <Spacer size="base" />
         <ScrollRestoration />
@@ -114,9 +212,10 @@ export  function App() {
 
 
 export default function AppWithProviders() {
- // const data = useLoaderData<LoaderData>()
+  const data = useLoaderData<LoaderData>()
+  console.log("&&&&&&&&&&&&&&&&&&&&&&&&&", data)
   return (
-      <ThemeProvider specifiedTheme={Theme.DARK}>
+      <ThemeProvider specifiedTheme={data.requestInfo.session.theme}>
         <App />
       </ThemeProvider>
   )
