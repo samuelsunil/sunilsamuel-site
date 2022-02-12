@@ -2,7 +2,6 @@ import * as React from 'react'
 import {
   Links,
   LiveReload,
-  LoaderFunction,
   Meta,
   Outlet,
   Scripts,
@@ -16,8 +15,6 @@ import clsx from 'clsx'
 import {
   useTheme,
   ThemeProvider,
-  NonFlashOfWrongThemeEls,
-  Theme,
 } from './utils/theme-provider'
 import tailwindStyles from '~/styles/tailwind.css'
 import vendorStyles from '~/styles/vendors.css'
