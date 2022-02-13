@@ -213,7 +213,7 @@ export  function App() {
 
 export default function AppWithProviders() {
   const data = useLoaderData<LoaderData>()
-  console.log("&&&&&&&&&&&&&&&&&&&&&&&&&", data)
+  
   return (
       <ThemeProvider specifiedTheme={data.requestInfo.session.theme}>
         <App />

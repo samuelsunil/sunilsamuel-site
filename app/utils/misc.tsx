@@ -172,7 +172,7 @@ function getRequiredEnvVarFromObj(
   key: string,
   devValue: string = `${key}-dev-value`,
 ) {
-  console.log("PROCESS _____________________________", obj.SESSION_SECRET)
+
   let value = devValue
   const envVal = obj[key]
   if (envVal) {

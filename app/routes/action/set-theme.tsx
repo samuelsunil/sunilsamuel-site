@@ -15,7 +15,7 @@ export const action: ActionFunction = async ({request}) => {
       success: false,
       message: `theme value of ${theme} is not a valid theme.`,
     })
-    console.log("&&&&&&&&&&&&&&&&&+++===============================================", theme)
+  
   themeSession.setTheme(theme)
   return json(
     {success: true},
