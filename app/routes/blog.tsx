@@ -8,6 +8,7 @@ import {SearchIcon} from '~/components/icons/search-icon'
 import {ArticleCard} from '~/components/article-card'
 import {ArrowLink} from '~/components/arrow-button'
 import {useRootData} from '~/utils/use-root-data'
+import {Grid} from '~/components/grid'
 import {
     // formatAbbreviatedNumber,
     // formatDate,
@@ -144,7 +145,9 @@ function BlogHome() {
           className="set-color-team-current-blue)}"
         >
             
-            
+            <Grid className="mb-14"> 
+            <div className="relative col-span-full h-20">
+                
             <div className="w-full">
             <form
               action="/blog"
@@ -203,6 +206,12 @@ function BlogHome() {
               </div>
             </form>
           </div>
+                
+                 </div>
+            
+            
+            </Grid>
+      
             
             
              </div> )
