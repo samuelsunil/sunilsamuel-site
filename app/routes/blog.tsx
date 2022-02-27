@@ -51,8 +51,8 @@ type LoaderData = {
       posts,
     ] = await Promise.all([
       getBlogMdxListItems().then(allPosts => {
-    
-      return {}; }// allPosts.filter(p => !p.frontmatter.draft),
+       
+      return []; }// allPosts.filter(p => !p.frontmatter.draft),
       )
     ])
   

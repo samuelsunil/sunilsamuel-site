@@ -3,6 +3,7 @@ import type { MdxListItem, MdxPage} from '~/types'
 import { typedBoolean } from '~/utils/misc'
 import {
     downloadDirList,
+    downloadMdxFileOrDirectory,
   } from '~/utils/github.server'
 
 /**
@@ -13,6 +14,15 @@ import {
     return mdxListItem
   }
 
+  async function downloadMdxFilesCached(
+    contentDir: string,
+    slug: string
+  ) {
+    
+    const downloaded = await downloadMdxFileOrDirectory(`${contentDir}/${slug}`);
+    return downloaded
+  }
+  
 
 const getDirListKey = (contentDir: string) => `${contentDir}:dir-list`
 
@@ -29,6 +39,8 @@ const getDirListKey = (contentDir: string) => `${contentDir}:dir-list`
         return dirList
   }
 
+  
+
 async function getMdxPagesInDirectory(
     contentDir: string
   ) {
@@ -38,7 +50,7 @@ async function getMdxPagesInDirectory(
     const pageDatas = await Promise.all(
       dirList.map(async ({slug}) => {
         return {
-         // ...(await downloadMdxFilesCached(contentDir, slug)),
+          ...(await downloadMdxFilesCached(contentDir, slug)),
           slug,
         }
       }),
