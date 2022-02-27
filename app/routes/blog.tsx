@@ -1,14 +1,16 @@
 import * as React from 'react'
 import type {LoaderFunction, HeadersFunction, MetaFunction} from 'remix'
 import {Link, json, useLoaderData, useSearchParams} from 'remix'
+import type {Await, SVSHandle, MdxListItem, Team} from '~/types'
 import {MixedCheckbox} from '@reach/checkbox'
 import clsx from 'clsx'
 import {H2, H3, H6, Paragraph} from '~/components/typography'
 import {SearchIcon} from '~/components/icons/search-icon'
 import {ArticleCard} from '~/components/article-card'
-import {ArrowLink} from '~/components/arrow-button'
+import {ArrowLink} from '~/components/arrow-button' 
 import {useRootData} from '~/utils/use-root-data'
 import {Grid} from '~/components/grid'
+import {getBlogMdxListItems} from '~/utils/mdx'
 import {
     // formatAbbreviatedNumber,
     // formatDate,
@@ -22,7 +24,12 @@ import {
   //import {filterPosts} from '~/utils/blog'
   import {ServerError} from '~/components/errors'
 
-
+  const handleId = 'blog'
+  export const handle: SVSHandle = {
+    id: handleId,
+    getSitemapEntries: () => [{route: `/blog`, priority: 0.7}],
+  }
+  
 
 // should be divisible by 3 and 2 (large screen, and medium screen).
 const PAGE_SIZE = 12
@@ -30,6 +37,46 @@ const initialIndexToShow = PAGE_SIZE
 
 const specialQueryRegex = /(?<not>!)?leader:(?<team>\w+)(\s|$)?/g
 
+
+
+type LoaderData = {
+    posts: Array<MdxListItem>
+    tags: Array<string>
+  }
+  
+  export const loader: LoaderFunction = async ({request}) => {
+   // const timings: Timings = {}
+  
+    const [
+      posts,
+    ] = await Promise.all([
+      getBlogMdxListItems().then(allPosts => {
+    
+      return {}; }// allPosts.filter(p => !p.frontmatter.draft),
+      )
+    ])
+  
+    const tags = new Set<string>()
+    for (const post of posts) {
+      for (const category of post.frontmatter.categories ?? []) {
+        tags.add(category)
+      }
+    }
+  
+    const data: LoaderData = {
+      posts,
+      tags: Array.from(tags),
+    }
+  
+    return json(data, {
+      headers: {
+        'Cache-Control': 'private, max-age=3600',
+        Vary: 'Cookie',
+       // 'Server-Timing': getServerTimeHeader(timings),
+      },
+    })
+  }
+  
 
 function BlogHome() {
     //const {requestInfo} = useRootData()
@@ -51,7 +98,9 @@ function BlogHome() {
 
   useUpdateQueryStringValueWithoutNavigation('q', query)
 
-  const regularQuery = query.replace(specialQueryRegex, '').trim()
+  const data = useLoaderData<LoaderData>()
+//   const {posts: allPosts, userReads} = data
+//   const regularQuery = query.replace(specialQueryRegex, '').trim()
 
   const matchingPosts = React.useMemo(() => {
     const r = new RegExp(specialQueryRegex)
