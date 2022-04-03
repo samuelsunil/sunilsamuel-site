@@ -5,7 +5,7 @@ import type * as H from 'hast'
 //import {remarkCodeBlocksShiki} from '@kentcdodds/md-temp'
 import remarkEmbedder from '@remark-embedder/core'
 import type {TransformerInfo} from '@remark-embedder/core'
-import oembedTransformer from '@remark-embedder/transformer-oembed'
+// import oembedTransformer from '@remark-embedder/transformer-oembed'
 import calculateReadingTime from 'reading-time'
 import type TPQueue from 'p-queue'
 import type {GitHubFile} from '~/types'
@@ -103,10 +103,6 @@ const eggheadTransformer = {
       searchParams.set('preload', 'false')
     }
 
-    // Kent's affiliate link
-    if (!searchParams.has('af')) {
-      searchParams.set('af', '5236ad')
-    }
 
     const iframeSrc = `https://${host}${pathname}/embed?${searchParams.toString()}`
 
@@ -124,7 +120,7 @@ function autoAffiliates() {
       if (linkNode.url.includes('amazon.com')) {
         const amazonUrl = new URL(linkNode.url)
         if (!amazonUrl.searchParams.has('tag')) {
-          amazonUrl.searchParams.set('tag', 'kentcdodds-20')
+          amazonUrl.searchParams.set('tag', 'samuelsunil-20')
           linkNode.url = amazonUrl.toString()
         }
       }

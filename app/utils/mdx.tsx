@@ -46,7 +46,7 @@ async function getMdxPagesInDirectory(
     contentDir: string
   ) {
     const dirList = await getMdxDirList(contentDir)
-    console.log("DIRLIST----------------", dirList)
+    
     // our octokit throttle plugin will make sure we don't hit the rate limit
     const pageDatas = await Promise.all(
       dirList.map(async ({slug}) => {
@@ -56,7 +56,7 @@ async function getMdxPagesInDirectory(
         }
       }),
     )
-  
+
     const pages = await Promise.all(
       pageDatas.map(pageData =>
         compileMdxCached({contentDir, ...pageData}),
@@ -75,9 +75,10 @@ async function getMdxPagesInDirectory(
     contentDir: string
     slug: string
     entry: string
-    files: Array<GitHubFile>
+    files: Array<GitHubFile>  
   }) {
-   
+    try{
+        console.log("TEST+=============================", slug )
         const compiledPage = await compileMdx<MdxPage['frontmatter']>(slug, files)
         if (compiledPage) {
         //   if (
@@ -118,6 +119,10 @@ async function getMdxPagesInDirectory(
         } else {
           return null
         }
+    } catch(err: unknown) {
+      console.log("compileMdxCached", err)
+    }
+        
   }
   
 

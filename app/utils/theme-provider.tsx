@@ -99,7 +99,7 @@ const clientThemeCode = `
   if (themeAlreadyApplied) {
     // this script shouldn't exist if the theme is already applied!
     console.warn(
-      "Hi there, could you let Kent know you're seeing this message? Thanks!",
+      "Hi there, could you let Sunil know you're seeing this message? Thanks!",
     );
   } else {
     cl.add(theme);
@@ -116,7 +116,7 @@ const clientThemeCode = `
     }
   } else {
     console.warn(
-      "Heya, could you let Kent know you're seeing this message? Thanks!",
+      "Heya, could you let Sunil know you're seeing this message? Thanks!",
     );
   }
 })();

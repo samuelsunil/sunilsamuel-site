@@ -138,8 +138,8 @@ async function downloadFile(path: string) {
   const {data} = (await octokit.request(
     'GET /repos/{owner}/{repo}/contents/{path}',
     {
-      owner: 'kentcdodds',
-      repo: 'kentcdodds.com',
+      owner: 'samuelsunil',
+      repo: 'sunilsamuel-site',
       path,
     },
   )) as {data: {content?: string; encoding?: string}}
