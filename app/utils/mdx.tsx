@@ -56,13 +56,13 @@ async function getMdxPagesInDirectory(
         }
       }),
     )
-
+    
     const pages = await Promise.all(
       pageDatas.map(pageData =>
         compileMdxCached({contentDir, ...pageData}),
       ),
     )
- 
+    console.log("PAGESSSSSSS+=============================", pages )
     return  pages.filter(typedBoolean)
   }
 
@@ -78,7 +78,7 @@ async function getMdxPagesInDirectory(
     files: Array<GitHubFile>  
   }) {
     try{
-        console.log("TEST+=============================", slug )
+        console.log("TEST+=============================", slug, files )
         const compiledPage = await compileMdx<MdxPage['frontmatter']>(slug, files)
         if (compiledPage) {
         //   if (
