@@ -62,7 +62,7 @@ function getSocialImageWithPreTitle({
   const featuredImageSection = `c_fill,ar_3:4,r_12,g_east,h_$gh_mul_10,x_$gw,${featuredImageLayerType}${featuredImageCloudinaryId}`
 
   return [
-    `https://res.cloudinary.com/sunilvsamuel-com/image/upload`,
+    `https://res.cloudinary.com/sunilsamuel/image/upload`,
     vars,
     preTitleSection,
     titleSection,
@@ -98,7 +98,7 @@ function getGenericSocialImage({words, img, url}: Record<string, unknown>) {
 
   const backgroundSection = `c_fill,w_$tw,h_$th/sunilvsamuel.com/social-background.png`
   return [
-    `sunilvsamuel-com/image/upload`,
+    `sunilsamuel/image/upload`,
     vars,
     primaryWordsSection,
     sunilProfileSection,
@@ -112,7 +112,7 @@ function getGenericSocialImage({words, img, url}: Record<string, unknown>) {
 function addCloudinaryProxies(app: App) {
   app.get(
     '/img/social',
-    httpProxy('https://res.cloudinary.com/sunilvsamuel-com', {
+    httpProxy('https://res.cloudinary.com/sunilsamuel', {
       proxyReqPathResolver(req) {
         const [, queryParamsString] = req.url.split('?')
         const params: Record<string, string> = {}
@@ -137,7 +137,7 @@ function addCloudinaryProxies(app: App) {
     // https://github.com/villadora/express-http-proxy/pull/492
     httpProxy('https://res.cloudinary.com/', {
       proxyReqPathResolver(req) {
-        return req.url.replace('/img', '/sunilvsamuel-com')
+        return req.url.replace('/img', '/sunilsamuel')
       },
     }),
   )

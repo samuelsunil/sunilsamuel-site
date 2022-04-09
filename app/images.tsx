@@ -3,7 +3,7 @@ import {setConfig, buildImageUrl} from 'cloudinary-build-url'
 
 
 setConfig({
-  cloudName: 'sunil-samuel-com',
+  cloudName: 'sunilsamuel',
 })
 
 type ImageBuilder = {

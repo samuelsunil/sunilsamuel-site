@@ -10,7 +10,7 @@ import {ClipboardCopyButton} from './clipboard-copy-button'
 // import {MissingSomething} from './kifs'
 import {BlurrableImage} from './blurrable-image'
 import {useRootData} from '~/utils/use-root-data'
-// import {getBannerAltProp, getBannerTitleProp} from '~/utils/mdx'
+ import {getBannerAltProp, getBannerTitleProp} from '~/utils/mdx'
 
 function ArticleCard({
   leadingTeam,
@@ -51,34 +51,34 @@ function ArticleCard({
             key={bannerCloudinaryId}
             blurDataUrl={bannerBlurDataUrl}
             className="aspect-h-4 aspect-w-3 rounded-lg"
-          //  img={
-          //    <img
-          //      title={frontmatter.title ?? getBannerTitleProp(frontmatter)}
-                // {...getImgProps(
-                //   getImageBuilder(
-                //     bannerCloudinaryId,
-                //     getBannerAltProp(frontmatter),
-                //   ),
-                //   {
-                //     widths: [280, 560, 840, 1100, 1300, 1650],
-                //     sizes: [
-                //       '(max-width:639px) 80vw',
-                //       '(min-width:640px) and (max-width:1023px) 40vw',
-                //       '(min-width:1024px) and (max-width:1620px) 25vw',
-                //       '420px',
-                //     ],
-                //     transformations: {
-                //       background: 'rgb:e6e9ee',
-                //       resize: {
-                //         type: 'fill',
-                //         aspectRatio: '3:4',
-                //       },
-                //     },
-                //   },
-                // )}
-             //   className="focus-ring w-full rounded-lg object-cover object-center transition"
-           // this   />
-           // }
+           img={
+             <img
+               title={frontmatter.title ?? getBannerTitleProp(frontmatter)}
+                {...getImgProps(
+                  getImageBuilder(
+                    bannerCloudinaryId,
+                    getBannerAltProp(frontmatter),
+                  ),
+                  {
+                    widths: [280, 560, 840, 1100, 1300, 1650],
+                    sizes: [
+                      '(max-width:639px) 80vw',
+                      '(min-width:640px) and (max-width:1023px) 40vw',
+                      '(min-width:1024px) and (max-width:1620px) 25vw',
+                      '420px',
+                    ],
+                    transformations: {
+                      background: 'rgb:e6e9ee',
+                      resize: {
+                        type: 'fill',
+                        aspectRatio: '3:4',
+                      },
+                    },
+                  },
+                )}
+               className="focus-ring w-full rounded-lg object-cover object-center transition"
+              />
+           }
           />
         ) : (
           <div className="aspect-h-4 aspect-w-3">

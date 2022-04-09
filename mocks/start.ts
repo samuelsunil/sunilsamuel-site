@@ -13,7 +13,7 @@ import {isConnectedToTheInternet, forward, isE2E, updateFixture} from './utils'
 // put one-off handlers that don't really need an entire file to themselves here
 const miscHandlers = [
   rest.get(
-    'https://res.cloudinary.com/sunilvsamuel-com/image/upload/w_100,q_auto,f_webp,e_blur:1000/unsplash/:photoId',
+    'https://res.cloudinary.com/sunilsamuel/image/upload/w_100,q_auto,f_webp,e_blur:1000/unsplash/:photoId',
     async (req, res, ctx) => {
       if (await isConnectedToTheInternet()) return res(forward())
 
@@ -23,7 +23,7 @@ const miscHandlers = [
       return res(ctx.body(buffer))
     },
   ),
-  rest.get(/res.cloudinary.com\/sunilvsamuel-com\//, (req, res) => {
+  rest.get(/res.cloudinary.com\/sunilsamuel\//, (req, res) => {
     return res(forward())
   }),
   rest.post(

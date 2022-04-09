@@ -126,6 +126,23 @@ async function getMdxPagesInDirectory(
   }
   
 
+
+function getBannerAltProp(frontmatter: MdxPage['frontmatter']) {
+  return (
+    frontmatter.bannerAlt ??
+    frontmatter.bannerTitle ??
+    frontmatter.bannerCredit ??
+    frontmatter.title ??
+    'Post banner'
+  )
+}
+
+function getBannerTitleProp(frontmatter: MdxPage['frontmatter']) {
+  return (
+    frontmatter.bannerTitle ?? frontmatter.bannerAlt ?? frontmatter.bannerCredit
+  )
+}
+
 async function getBlogMdxListItems() {
         const pages = await getMdxPagesInDirectory('blog')
         // pages = pages.sort((a, z) => {
@@ -145,6 +162,7 @@ export {
     getMdxPagesInDirectory,
     mapFromMdxPageToMdxListItem,
     getBlogMdxListItems,
-   
+    getBannerTitleProp,
+    getBannerAltProp,
   }
   
