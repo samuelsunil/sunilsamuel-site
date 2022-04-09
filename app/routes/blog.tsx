@@ -1,112 +1,106 @@
-import * as React from 'react'
-import type {LoaderFunction, HeadersFunction, MetaFunction} from 'remix'
-import {Link, json, useLoaderData, useSearchParams} from 'remix'
-import type {Await, SVSHandle, MdxListItem, Team} from '~/types'
-import {MixedCheckbox} from '@reach/checkbox'
-import clsx from 'clsx'
-import {H2, H3, H6, Paragraph} from '~/components/typography'
-import {SearchIcon} from '~/components/icons/search-icon'
-import {ArticleCard} from '~/components/article-card'
-import {ArrowLink} from '~/components/arrow-button' 
-import {useRootData} from '~/utils/use-root-data'
-import {Grid} from '~/components/grid'
-import {getBlogMdxListItems} from '~/utils/mdx'
+import * as React from "react";
+import type { LoaderFunction, HeadersFunction, MetaFunction } from "remix";
+import { Link, json, useLoaderData, useSearchParams } from "remix";
+import type { Await, SVSHandle, MdxListItem, Team } from "~/types";
+import { MixedCheckbox } from "@reach/checkbox";
+import clsx from "clsx";
+import { H2, H3, H6, Paragraph } from "~/components/typography";
+import { SearchIcon } from "~/components/icons/search-icon";
+import { ArticleCard } from "~/components/article-card";
+import { ArrowLink } from "~/components/arrow-button";
+import { useRootData } from "~/utils/use-root-data";
+import { Grid } from "~/components/grid";
+import { getBlogMdxListItems } from "~/utils/mdx";
 import {
-    // formatAbbreviatedNumber,
-    // formatDate,
-    // formatNumber,
-    // getDisplayUrl,
-    // getUrl,
-    // isTeam,
-    // reuseUsefulLoaderHeaders,
-    useUpdateQueryStringValueWithoutNavigation,
-  } from '~/utils/misc'
-  //import {filterPosts} from '~/utils/blog'
-  import {ServerError} from '~/components/errors'
+  // formatAbbreviatedNumber,
+  // formatDate,
+  // formatNumber,
+  // getDisplayUrl,
+  // getUrl,
+  // isTeam,
+  // reuseUsefulLoaderHeaders,
+  useUpdateQueryStringValueWithoutNavigation,
+} from "~/utils/misc";
+//import {filterPosts} from '~/utils/blog'
+import { ServerError } from "~/components/errors";
 
-  const handleId = 'blog'
-  export const handle: SVSHandle = {
-    id: handleId,
-    getSitemapEntries: () => [{route: `/blog`, priority: 0.7}],
-  }
-  
+const handleId = "blog";
+export const handle: SVSHandle = {
+  id: handleId,
+  getSitemapEntries: () => [{ route: `/blog`, priority: 0.7 }],
+};
 
 // should be divisible by 3 and 2 (large screen, and medium screen).
-const PAGE_SIZE = 12
-const initialIndexToShow = PAGE_SIZE
+const PAGE_SIZE = 12;
+const initialIndexToShow = PAGE_SIZE;
 
-const specialQueryRegex = /(?<not>!)?leader:(?<team>\w+)(\s|$)?/g
-
-
+const specialQueryRegex = /(?<not>!)?leader:(?<team>\w+)(\s|$)?/g;
 
 type LoaderData = {
-    posts: Array<MdxListItem>
-    tags: Array<string>
-  }
-  
-  export const loader: LoaderFunction = async ({request}) => {
-   // const timings: Timings = {}
-  
-    const [
-      posts,
-    ] = await Promise.all([
-      getBlogMdxListItems().then(allPosts => {
-       
-      return []; }// allPosts.filter(p => !p.frontmatter.draft),
-      )
-    ])
-  
-    const tags = new Set<string>()
-    for (const post of posts) {
-      for (const category of post.frontmatter.categories ?? []) {
-        tags.add(category)
-      }
+  posts: Array<MdxListItem>;
+  tags: Array<string>;
+};
+
+export const loader: LoaderFunction = async ({ request }) => {
+  // const timings: Timings = {}
+
+  const [posts] = await Promise.all([
+    getBlogMdxListItems().then((allPosts) =>
+      allPosts.filter((p) => !p.frontmatter.draft)
+    ),
+  ]);
+
+  const tags = new Set<string>();
+  for (const post of posts) {
+    for (const category of post.frontmatter.categories ?? []) {
+      tags.add(category);
     }
-  
-    const data: LoaderData = {
-      posts,
-      tags: Array.from(tags),
-    }
-  
-    return json(data, {
-      headers: {
-        'Cache-Control': 'private, max-age=3600',
-        Vary: 'Cookie',
-       // 'Server-Timing': getServerTimeHeader(timings),
-      },
-    })
   }
-  
+
+  const data: LoaderData = {
+    posts,
+    tags: Array.from(tags),
+  };
+
+  return json(data, {
+    headers: {
+      "Cache-Control": "private, max-age=3600",
+      Vary: "Cookie",
+      // 'Server-Timing': getServerTimeHeader(timings),
+    },
+  });
+};
 
 function BlogHome() {
-    //const {requestInfo} = useRootData()
-    const [searchParams] = useSearchParams()
-    const searchInputRef = React.useRef<HTMLInputElement>(null)
+  //const {requestInfo} = useRootData()
+  const [searchParams] = useSearchParams();
+  const searchInputRef = React.useRef<HTMLInputElement>(null);
 
-    const resultsRef = React.useRef<HTMLDivElement>(null)
-    /**
+  const resultsRef = React.useRef<HTMLDivElement>(null);
+  /**
    * This is here to make sure that a user doesn't hit "enter" on the search
    * button, which focuses the input and then keyup the enter on the input
    * which will trigger the scroll down. We should *only* scroll when the
    * "enter" keypress and keyup happen on the input.
    */
-  const ignoreInputKeyUp = React.useRef<boolean>(false)
+  const ignoreInputKeyUp = React.useRef<boolean>(false);
   const [queryValue, setQuery] = React.useState<string>(() => {
-    return searchParams.get('q') ?? ''
-  })
-  const query = queryValue.trim()
+    return searchParams.get("q") ?? "";
+  });
+  const query = queryValue.trim();
 
-  useUpdateQueryStringValueWithoutNavigation('q', query)
+  useUpdateQueryStringValueWithoutNavigation("q", query);
 
-  const data = useLoaderData<LoaderData>()
-//   const {posts: allPosts, userReads} = data
-//   const regularQuery = query.replace(specialQueryRegex, '').trim()
+  const data = useLoaderData<LoaderData>();
+  console.log("POSTs", data);
+  const { posts: allPosts } = data;
+  const regularQuery = query.replace(specialQueryRegex, "").trim();
 
   const matchingPosts = React.useMemo(() => {
-    const r = new RegExp(specialQueryRegex)
-    let match = r.exec(query)
+    const r = new RegExp(specialQueryRegex);
+    let match = r.exec(query);
     while (match) {
-      match = r.exec(query)
+      match = r.exec(query);
     }
 
     //const filteredPosts = allPosts
@@ -138,92 +132,87 @@ function BlogHome() {
     //       })
     //     : filteredPosts
 
-    return null //filterPosts(filteredPosts, regularQuery)
-  }, [query])
+    return null; //filterPosts(filteredPosts, regularQuery)
+  }, [query]);
 
-  const [indexToShow, setIndexToShow] = React.useState(initialIndexToShow)
+  const [indexToShow, setIndexToShow] = React.useState(initialIndexToShow);
   // when the query changes, we want to reset the index
   React.useEffect(() => {
-    setIndexToShow(initialIndexToShow)
-  }, [query])
-
+    setIndexToShow(initialIndexToShow);
+  }, [query]);
 
   // this bit is very similar to what's on the blogs page.
   // Next time we need to do work in here, let's make an abstraction for them
 
-//   function toggleTag(tag: string) {
-//     setQuery(q => {
-//       // create a regexp so that we can replace multiple occurrences (`react node react`)
-//       const expression = new RegExp(tag, 'ig')
+  //   function toggleTag(tag: string) {
+  //     setQuery(q => {
+  //       // create a regexp so that we can replace multiple occurrences (`react node react`)
+  //       const expression = new RegExp(tag, 'ig')
 
-//       const newQuery = expression.test(q)
-//         ? q.replace(expression, '')
-//         : `${q} ${tag}`
+  //       const newQuery = expression.test(q)
+  //         ? q.replace(expression, '')
+  //         : `${q} ${tag}`
 
-//       // trim and remove subsequent spaces (`react   node ` => `react node`)
-//       return newQuery.replace(/\s+/g, ' ').trim()
-//     })
-//   }
+  //       // trim and remove subsequent spaces (`react   node ` => `react node`)
+  //       return newQuery.replace(/\s+/g, ' ').trim()
+  //     })
+  //   }
 
-  const isSearching = query.length > 0
+  const isSearching = query.length > 0;
 
-//   const posts = isSearching
-//     ? matchingPosts.slice(0, indexToShow)
-//     : matchingPosts
-//         .filter(p => p.slug !== data.recommended?.slug)
-//         .slice(0, indexToShow)
+  //   const posts = isSearching
+  //     ? matchingPosts.slice(0, indexToShow)
+  //     : matchingPosts
+  //         .filter(p => p.slug !== data.recommended?.slug)
+  //         .slice(0, indexToShow)
 
-//   const hasMorePosts = isSearching
-//     ? indexToShow < matchingPosts.length
-//     : indexToShow < matchingPosts.length - 1
+  //   const hasMorePosts = isSearching
+  //     ? indexToShow < matchingPosts.length
+  //     : indexToShow < matchingPosts.length - 1
 
-//   const visibleTags = isSearching
-//     ? new Set(
-//         matchingPosts
-//           .flatMap(post => post.frontmatter.categories)
-//           .filter(Boolean),
-//       )
-//     : new Set(data.tags)
+  //   const visibleTags = isSearching
+  //     ? new Set(
+  //         matchingPosts
+  //           .flatMap(post => post.frontmatter.categories)
+  //           .filter(Boolean),
+  //       )
+  //     : new Set(data.tags)
 
-//   const recommendedPermalink = data.recommended
-//     ? `${requestInfo.origin}/blog/${data.recommended.slug}`
-//     : undefined
+  //   const recommendedPermalink = data.recommended
+  //     ? `${requestInfo.origin}/blog/${data.recommended.slug}`
+  //     : undefined
 
-      return (
-        <div
-          className="set-color-team-current-blue)}"
-        >
-            
-            <Grid className="mb-14"> 
-            <div className="relative col-span-full h-20">
-                
-            <div className="w-full">
+  return (
+    <div className="set-color-team-current-blue)}">
+      <Grid className="mb-14">
+        <div className="relative col-span-full h-20">
+          <div className="w-full">
             <form
               action="/blog"
               method="GET"
-              onSubmit={e => e.preventDefault()}
+              onSubmit={(e) => e.preventDefault()}
             >
               <div className="relative">
                 <button
-                  title={query === '' ? 'Search' : 'Clear search'}
+                  title={query === "" ? "Search" : "Clear search"}
                   type="button"
                   onClick={() => {
-                    setQuery('')
-                    ignoreInputKeyUp.current = true
-                    searchInputRef.current?.focus()
+                    setQuery("");
+                    ignoreInputKeyUp.current = true;
+                    searchInputRef.current?.focus();
                   }}
                   onKeyDown={() => {
-                    ignoreInputKeyUp.current = true
+                    ignoreInputKeyUp.current = true;
                   }}
                   onKeyUp={() => {
-                    ignoreInputKeyUp.current = false
+                    ignoreInputKeyUp.current = false;
                   }}
                   className={clsx(
-                    'absolute left-6 top-0 flex h-full items-center justify-center border-none bg-transparent p-0 text-blueGray-500',
+                    "text-blueGray-500 absolute left-6 top-0 flex h-full items-center justify-center border-none bg-transparent p-0",
                     {
-                      'cursor-pointer': query !== '',
-                      'cursor-default': query === '',
-                    },
+                      "cursor-pointer": query !== "",
+                      "cursor-default": query === "",
+                    }
                   )}
                 >
                   <SearchIcon />
@@ -232,50 +221,69 @@ function BlogHome() {
                   ref={searchInputRef}
                   type="search"
                   value={queryValue}
-                  onChange={event =>
+                  onChange={(event) =>
                     setQuery(event.currentTarget.value.toLowerCase())
                   }
-                  onKeyUp={e => {
-                    if (!ignoreInputKeyUp.current && e.key === 'Enter') {
+                  onKeyUp={(e) => {
+                    if (!ignoreInputKeyUp.current && e.key === "Enter") {
                       resultsRef.current
-                        ?.querySelector('a')
-                        ?.focus({preventScroll: true})
-                      resultsRef.current?.scrollIntoView({behavior: 'smooth'})
+                        ?.querySelector("a")
+                        ?.focus({ preventScroll: true });
+                      resultsRef.current?.scrollIntoView({
+                        behavior: "smooth",
+                      });
                     }
-                    ignoreInputKeyUp.current = false
+                    ignoreInputKeyUp.current = false;
                   }}
                   name="q"
                   placeholder="Search posts...."
-                  className="appearance-none text-primary bg-primary border-secondary focus:bg-secondary focus:outline-none w-full rounded-full border py-6 pl-14 pr-6 text-lg font-medium hover:border-team-current focus:border-team-current md:pr-24"
+                  className="text-primary bg-primary border-secondary focus:bg-secondary hover:border-team-current focus:border-team-current w-full appearance-none rounded-full border py-6 pl-14 pr-6 text-lg font-medium focus:outline-none md:pr-24"
                 />
-                <div className="absolute right-6 top-0 hidden h-full w-14 items-center justify-between text-lg font-medium text-blueGray-500 md:flex">
+                <div className="text-blueGray-500 absolute right-6 top-0 hidden h-full w-14 items-center justify-between text-lg font-medium md:flex">
                   <div className="flex-1" />
                   {/* {matchingPosts.length} */}
                 </div>
               </div>
             </form>
           </div>
-                
-                 </div>
-            
-            
-            </Grid>
-      
-            
-            
-             </div> )
+        </div>
+      </Grid>
+
+
+      <Grid className="mb-64" ref={resultsRef}>
+        {allPosts.length === 0 ? (
+          <div className="col-span-full flex flex-col items-center">
+            <img
+              className="mt-24 h-auto w-full max-w-lg"
+              // {...getImgProps(images.bustedOnewheel, {
+              //   widths: [350, 512, 1024, 1536],
+              //   sizes: ['(max-width: 639px) 80vw', '512px'],
+              // })}
+            />
+            <H3 as="p" variant="secondary" className="mt-24 max-w-lg">
+              {`Couldn't find anything to match your criteria. Sorry.`}
+            </H3>
+          </div>
+        ) : (
+          allPosts.map(article => (
+            <div key={article.slug} className="col-span-4 mb-10">
+              <ArticleCard
+                article={article}
+              />
+            </div>
+          ))
+        )}
+      </Grid>
+    </div>
+  );
 }
 
+export default BlogHome;
 
-
-export default BlogHome
-
-export function ErrorBoundary({error}: {error: Error}) {
-  console.error(error)
-  return <ServerError />
+export function ErrorBoundary({ error }: { error: Error }) {
+  console.error(error);
+  return <ServerError />;
 }
-
-
 
 /*
 eslint

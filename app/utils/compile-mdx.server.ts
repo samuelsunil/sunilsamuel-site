@@ -198,20 +198,20 @@ async function compileMdx<FrontmatterType extends Record<string, unknown>>(
     const {frontmatter, code} = await bundleMDX({
       source: indexFile.content,
       files,
-      mdxOptions(options) {
-        options.remarkPlugins = [
-          ...(options.remarkPlugins ?? []),
-          remarkSlug,
-          [remarkAutolinkHeadings, {behavior: 'wrap'}],
-          gfm,
-          ...remarkPlugins,
-        ]
-        options.rehypePlugins = [
-          ...(options.rehypePlugins ?? []),
-          ...rehypePlugins,
-        ]
-        return options
-      },
+      // mdxOptions(options) {
+      //   options.remarkPlugins = [
+      //     ...(options.remarkPlugins ?? []),
+      //     remarkSlug,
+      //     [remarkAutolinkHeadings, {behavior: 'wrap'}],
+      //     gfm,
+      //     ...remarkPlugins,
+      //   ]
+      //   options.rehypePlugins = [
+      //     ...(options.rehypePlugins ?? []),
+      //     ...rehypePlugins,
+      //   ]
+      //   return options
+      // },
     })
     const readTime = calculateReadingTime(indexFile.content)
 
