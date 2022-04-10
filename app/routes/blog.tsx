@@ -226,70 +226,7 @@ const searchInputPlaceholder = 'Search posts';
           </div>
         }
       />
-      {/* <Grid className="mb-14">
-        <div className="relative col-span-full h-20">
-          <div className="w-full">
-            <form
-              action="/blog"
-              method="GET"
-              onSubmit={(e) => e.preventDefault()}
-            >
-              <div className="relative">
-                <button
-                  title={query === "" ? "Search" : "Clear search"}
-                  type="button"
-                  onClick={() => {
-                    setQuery("");
-                    ignoreInputKeyUp.current = true;
-                    searchInputRef.current?.focus();
-                  }}
-                  onKeyDown={() => {
-                    ignoreInputKeyUp.current = true;
-                  }}
-                  onKeyUp={() => {
-                    ignoreInputKeyUp.current = false;
-                  }}
-                  className={clsx(
-                    "text-blueGray-500 absolute left-6 top-0 flex h-full items-center justify-center border-none bg-transparent p-0",
-                    {
-                      "cursor-pointer": query !== "",
-                      "cursor-default": query === "",
-                    }
-                  )}
-                >
-                  <SearchIcon />
-                </button>
-                <input
-                  ref={searchInputRef}
-                  type="search"
-                  value={queryValue}
-                  onChange={(event) =>
-                    setQuery(event.currentTarget.value.toLowerCase())
-                  }
-                  onKeyUp={(e) => {
-                    if (!ignoreInputKeyUp.current && e.key === "Enter") {
-                      resultsRef.current
-                        ?.querySelector("a")
-                        ?.focus({ preventScroll: true });
-                      resultsRef.current?.scrollIntoView({
-                        behavior: "smooth",
-                      });
-                    }
-                    ignoreInputKeyUp.current = false;
-                  }}
-                  name="q"
-                  placeholder="Search posts...."
-                  className="text-primary bg-primary border-secondary focus:bg-secondary hover:border-team-current focus:border-team-current w-full appearance-none rounded-full border py-6 pl-14 pr-6 text-lg font-medium focus:outline-none md:pr-24"
-                />
-                <div className="text-blueGray-500 absolute right-6 top-0 hidden h-full w-14 items-center justify-between text-lg font-medium md:flex">
-                  <div className="flex-1" />
-                  {/* {matchingPosts.length} */}
-                {/* </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </Grid> } */}
+    
 
 
       <Grid className="mb-14">

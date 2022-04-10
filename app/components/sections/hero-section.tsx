@@ -78,7 +78,7 @@ function HeroSection({
   return (
     <Grid
       as={as}
-      className={clsx('lg:min-h-[40rem] lg: mb-24 pt-24 h-auto lg:pb-12', {
+      className={clsx('lg:min-h-[20rem] lg: mb-24 pt-24 h-auto lg:pb-12', {
         'lg:mb-64': arrowLabel,
         'lg:mb-0': !arrowLabel,
       })}
