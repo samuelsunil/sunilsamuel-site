@@ -4,6 +4,9 @@ import { Link, json, useLoaderData, useSearchParams } from "remix";
 import type { Await, SVSHandle, MdxListItem, Team } from "~/types";
 import { MixedCheckbox } from "@reach/checkbox";
 import clsx from "clsx";
+import {HeroSection} from '~/components/sections/hero-section'
+import {Tag} from '~/components/tag'
+import {Spacer} from '~/components/spacer'
 import { H2, H3, H6, Paragraph } from "~/components/typography";
 import { SearchIcon } from "~/components/icons/search-icon";
 import { ArticleCard } from "~/components/article-card";
@@ -23,6 +26,7 @@ import {
 } from "~/utils/misc";
 //import {filterPosts} from '~/utils/blog'
 import { ServerError } from "~/components/errors";
+import { filterPosts } from "~/utils/blog";
 
 const handleId = "blog";
 export const handle: SVSHandle = {
@@ -38,6 +42,7 @@ const specialQueryRegex = /(?<not>!)?leader:(?<team>\w+)(\s|$)?/g;
 
 type LoaderData = {
   posts: Array<MdxListItem>;
+  recommended: MdxListItem | undefined
   tags: Array<string>;
 };
 
@@ -59,6 +64,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const data: LoaderData = {
     posts,
+    //recommended,
     tags: Array.from(tags),
   };
 
@@ -72,7 +78,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 function BlogHome() {
-  //const {requestInfo} = useRootData()
+  const {requestInfo} = useRootData()
   const [searchParams] = useSearchParams();
   const searchInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -92,48 +98,15 @@ function BlogHome() {
   useUpdateQueryStringValueWithoutNavigation("q", query);
 
   const data = useLoaderData<LoaderData>();
-  console.log("POSTs", data);
   const { posts: allPosts } = data;
   const regularQuery = query.replace(specialQueryRegex, "").trim();
 
+
   const matchingPosts = React.useMemo(() => {
-    const r = new RegExp(specialQueryRegex);
-    let match = r.exec(query);
-    while (match) {
-      match = r.exec(query);
-    }
+    const filteredPosts = allPosts
+    return filterPosts(filteredPosts, regularQuery)
+  }, [allPosts, regularQuery])
 
-    //const filteredPosts = allPosts
-
-    // filteredPosts =
-    //   userReadsState === 'unset'
-    //     ? filteredPosts
-    //     : filteredPosts.filter(post => {
-    //         const isRead = userReads.includes(post.slug)
-    //         if (userReadsState === 'read' && !isRead) return false
-    //         if (userReadsState === 'unread' && isRead) return false
-    //         return true
-    //       })
-
-    // filteredPosts =
-    //   leaders.length || nonLeaders.length
-    //     ? filteredPosts.filter(post => {
-    //         const leader = getLeadingTeamForSlug(post.slug)
-    //         if (leaders.length && leader && leaders.includes(leader)) {
-    //           return true
-    //         }
-    //         if (
-    //           nonLeaders.length &&
-    //           (!leader || !nonLeaders.includes(leader))
-    //         ) {
-    //           return true
-    //         }
-    //         return false
-    //       })
-    //     : filteredPosts
-
-    return null; //filterPosts(filteredPosts, regularQuery)
-  }, [query]);
 
   const [indexToShow, setIndexToShow] = React.useState(initialIndexToShow);
   // when the query changes, we want to reset the index
@@ -144,47 +117,116 @@ function BlogHome() {
   // this bit is very similar to what's on the blogs page.
   // Next time we need to do work in here, let's make an abstraction for them
 
-  //   function toggleTag(tag: string) {
-  //     setQuery(q => {
-  //       // create a regexp so that we can replace multiple occurrences (`react node react`)
-  //       const expression = new RegExp(tag, 'ig')
+    function toggleTag(tag: string) {
+      setQuery(q => {
+        // create a regexp so that we can replace multiple occurrences (`react node react`)
+        const expression = new RegExp(tag, 'ig')
 
-  //       const newQuery = expression.test(q)
-  //         ? q.replace(expression, '')
-  //         : `${q} ${tag}`
+        const newQuery = expression.test(q)
+          ? q.replace(expression, '')
+          : `${q} ${tag}`
 
-  //       // trim and remove subsequent spaces (`react   node ` => `react node`)
-  //       return newQuery.replace(/\s+/g, ' ').trim()
-  //     })
-  //   }
+        // trim and remove subsequent spaces (`react   node ` => `react node`)
+        return newQuery.replace(/\s+/g, ' ').trim()
+      })
+    }
 
   const isSearching = query.length > 0;
 
-  //   const posts = isSearching
-  //     ? matchingPosts.slice(0, indexToShow)
-  //     : matchingPosts
-  //         .filter(p => p.slug !== data.recommended?.slug)
-  //         .slice(0, indexToShow)
+    const posts = isSearching
+      ? matchingPosts.slice(0, indexToShow)
+      : matchingPosts
+          .filter(p => p.slug !== data.recommended?.slug)
+          .slice(0, indexToShow)
 
-  //   const hasMorePosts = isSearching
-  //     ? indexToShow < matchingPosts.length
-  //     : indexToShow < matchingPosts.length - 1
+    const hasMorePosts = isSearching
+      ? indexToShow < matchingPosts.length
+      : indexToShow < matchingPosts.length - 1
 
-  //   const visibleTags = isSearching
-  //     ? new Set(
-  //         matchingPosts
-  //           .flatMap(post => post.frontmatter.categories)
-  //           .filter(Boolean),
-  //       )
-  //     : new Set(data.tags)
+    const visibleTags = isSearching
+      ? new Set(
+        matchingPosts
+            .flatMap(post => post.frontmatter.categories)
+            .filter(Boolean),
+        )
+      : new Set(data.tags)
 
-  //   const recommendedPermalink = data.recommended
-  //     ? `${requestInfo.origin}/blog/${data.recommended.slug}`
-  //     : undefined
+    // const recommendedPermalink = data.recommended
+    //   ? `${requestInfo.origin}/blog/${data.recommended.slug}`
+    //   : undefined
+ const userReadsState = "unread";
+
+const searchInputPlaceholder = 'Search posts';
 
   return (
     <div className="set-color-team-current-blue)}">
-      <Grid className="mb-14">
+      <HeroSection
+        title="Learn development with great articles."
+        
+        // imageBuilder={images.skis}
+        action={
+          <div className="w-full">
+            <form
+              action="/blog"
+              method="GET"
+              onSubmit={e => e.preventDefault()}
+            >
+              <div className="relative">
+                <button
+                  title={query === '' ? 'Search' : 'Clear search'}
+                  type="button"
+                  onClick={() => {
+                    setQuery('')
+                    ignoreInputKeyUp.current = true
+                    searchInputRef.current?.focus()
+                  }}
+                  onKeyDown={() => {
+                    ignoreInputKeyUp.current = true
+                  }}
+                  onKeyUp={() => {
+                    ignoreInputKeyUp.current = false
+                  }}
+                  className={clsx(
+                    'absolute left-6 top-0 flex h-full items-center justify-center border-none bg-transparent p-0 text-blueGray-500',
+                    {
+                      'cursor-pointer': query !== '',
+                      'cursor-default': query === '',
+                    },
+                  )}
+                >
+                  <SearchIcon />
+                </button>
+                <input
+                  ref={searchInputRef}
+                  type="search"
+                  value={queryValue}
+                  onChange={event =>
+                   
+                    setQuery(event.currentTarget.value.toLowerCase())
+                  }
+                  onKeyUp={e => {
+                    if (!ignoreInputKeyUp.current && e.key === 'Enter') {
+                      resultsRef.current
+                        ?.querySelector('a')
+                        ?.focus({preventScroll: true})
+                      resultsRef.current?.scrollIntoView({behavior: 'smooth'})
+                    }
+                    ignoreInputKeyUp.current = false
+                  }}
+                  name="q"
+                  placeholder={searchInputPlaceholder}
+                  className="appearance-none text-primary bg-primary border-secondary focus:bg-secondary focus:outline-none w-full rounded-full border py-6 pl-14 pr-6 text-lg font-medium hover:border-team-current focus:border-team-current md:pr-24"
+                />
+                <div className="absolute right-6 top-0 hidden h-full w-14 items-center justify-between text-lg font-medium text-blueGray-500 md:flex">
+                  <div className="flex-1" />
+                  {posts.length}
+                </div>
+              </div>
+            </form>
+          </div>
+        }
+      />
+      {/* <Grid className="mb-14">
         <div className="relative col-span-full h-20">
           <div className="w-full">
             <form
@@ -242,13 +284,39 @@ function BlogHome() {
                 <div className="text-blueGray-500 absolute right-6 top-0 hidden h-full w-14 items-center justify-between text-lg font-medium md:flex">
                   <div className="flex-1" />
                   {/* {matchingPosts.length} */}
-                </div>
+                {/* </div>
               </div>
             </form>
           </div>
         </div>
-      </Grid>
+      </Grid> } */}
 
+
+      <Grid className="mb-14">
+        <Spacer size="xs" className="col-span-full" />
+
+        {data.tags.length > 0 ? (
+          <>
+            <H6 as="div" className="col-span-full mb-6">
+              Search blog by topics
+            </H6>
+            <div className="col-span-full -mb-4 -mr-4 flex flex-wrap lg:col-span-10">
+              {data.tags.map(tag => {
+                const selected = regularQuery.includes(tag)
+                return (
+                  <Tag
+                    key={tag}
+                    tag={tag}
+                    selected={selected}
+                    onClick={() => toggleTag(tag)}
+                    disabled={!visibleTags.has(tag) && !selected}
+                  />
+                )
+              })}
+            </div>
+          </>
+        ) : null}
+      </Grid>
 
       <Grid className="mb-64" ref={resultsRef}>
         {allPosts.length === 0 ? (
@@ -265,7 +333,7 @@ function BlogHome() {
             </H3>
           </div>
         ) : (
-          allPosts.map(article => (
+          posts.map(article => (
             <div key={article.slug} className="col-span-4 mb-10">
               <ArticleCard
                 article={article}
