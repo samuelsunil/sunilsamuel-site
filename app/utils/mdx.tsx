@@ -1,4 +1,7 @@
-
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import * as React from 'react'
+import * as mdxBundler from 'mdx-bundler/client'
+import type {LoaderData as RootLoaderData} from '../root'
 import type { GitHubFile,MdxListItem, MdxPage} from '~/types'
 import { typedBoolean } from '~/utils/misc'
 import {
@@ -6,6 +9,16 @@ import {
     downloadMdxFileOrDirectory,
   } from '~/utils/github.server'
   import {compileMdx} from '~/utils/compile-mdx.server'
+
+
+
+  // type CachifiedOptions = {
+  //   forceFresh?: boolean | string
+  //   request?: Request
+  //   timings?: Timings
+  //   maxAge?: number
+  //   expires?: Date
+  // }
 
 /**
  * This is useful for when you don't want to send all the code for a page to the client.
@@ -40,6 +53,35 @@ const getDirListKey = (contentDir: string) => `${contentDir}:dir-list`
         return dirList
   }
 
+  async function getMdxPage(
+    {
+      contentDir,
+      slug,
+    }: {
+      contentDir: string
+      slug: string
+    }
+  ): Promise<MdxPage | null | undefined> {
+        const pageFiles = await downloadMdxFilesCached(contentDir, slug)
+        const compiledPage = await compileMdxCached({
+          contentDir,
+          slug,
+          ...pageFiles
+        }).catch(err => {
+          console.error(`Failed to get a fresh value for mdx:`, {
+            contentDir,
+            slug,
+          })
+          return Promise.reject(err)
+        })
+        return compiledPage
+      }
+  
+    // if (!page) {
+    //   // if there's no page, let's remove it from the cache
+    //   void redisCache.del(key)
+    // }
+    // return page
   
 
 async function getMdxPagesInDirectory(
@@ -137,6 +179,55 @@ function getBannerAltProp(frontmatter: MdxPage['frontmatter']) {
   )
 }
 
+
+function mdxPageMeta({
+  data,
+  parentsData,
+}: {
+  data: {page: MdxPage | null} | null
+  parentsData: {root: RootLoaderData}
+}) {
+  const {requestInfo} = parentsData.root
+  if (data?.page) {
+    const {keywords = [], ...extraMeta} = data.page.frontmatter.meta ?? {}
+    let title = data.page.frontmatter.title
+    const isDraft = data.page.frontmatter.draft
+    if (isDraft) title = `(DRAFT) ${title ?? ''}`
+    return {
+      ...(isDraft ? {robots: 'noindex'} : null),
+      // ...getSocialMetas({
+      //   origin: requestInfo.origin,
+      //   title,
+      //   description: data.page.frontmatter.description,
+      //   keywords: keywords.join(', '),
+      //   //url: // getUrl(requestInfo),
+      //   // image: getSocialImageWithPreTitle({
+      //   //   origin: requestInfo.origin,
+      //   //   url: getDisplayUrl(requestInfo),
+      //   //   featuredImage:
+      //   //     data.page.frontmatter.bannerCloudinaryId ??
+      //   //     'kentcdodds.com/illustrations/kody-flying_blue',
+      //   //   title:
+      //   //     data.page.frontmatter.socialImageTitle ??
+      //   //     data.page.frontmatter.title ??
+      //   //     'Untitled',
+      //   //   preTitle:
+      //   //     data.page.frontmatter.socialImagePreTitle ??
+      //   //     `Check out this article`,
+      //   // }),
+      // }),
+      ...extraMeta,
+    }
+  } else {
+    return {
+      title: 'Not found',
+      description:
+        'You landed on a page that Kody the Coding Koala could not find 🐨😢',
+    }
+  }
+}
+
+
 function getBannerTitleProp(frontmatter: MdxPage['frontmatter']) {
   return (
     frontmatter.bannerTitle ?? frontmatter.bannerAlt ?? frontmatter.bannerCredit
@@ -144,7 +235,7 @@ function getBannerTitleProp(frontmatter: MdxPage['frontmatter']) {
 }
 
 async function getBlogMdxListItems() {
-        const pages = await getMdxPagesInDirectory('blog')
+        let pages = await getMdxPagesInDirectory('blog')
         // pages = pages.sort((a, z) => {
         //   const aTime = new Date(a.frontmatter.date ?? '').getTime()
         //   const zTime = new Date(z.frontmatter.date ?? '').getTime()
@@ -154,11 +245,36 @@ async function getBlogMdxListItems() {
         return pages.map(mapFromMdxPageToMdxListItem)
   }
 
+  /**
+ * This should be rendered within a useMemo
+ * @param code the code to get the component from
+ * @returns the component
+ */
+function getMdxComponent(code: string) {
+  const Component = mdxBundler.getMDXComponent(code)
+  function SVSMdxComponent({
+    components,
+    ...rest
+  }: Parameters<typeof Component>['0']) {
+    return (
+      // @ts-expect-error the types are wrong here
+      <Component components={{...mdxComponents, ...components}} {...rest} />
+    )
+  }
+  return SVSMdxComponent
+}
 
+  function useMdxComponent(code: string) {
+    return React.useMemo(() => getMdxComponent(code), [code])
+  }
+  
 
 export {
 
-    getMdxDirList,
+    getMdxDirList, 
+    getMdxPage,
+    mdxPageMeta,
+    useMdxComponent,
     getMdxPagesInDirectory,
     mapFromMdxPageToMdxListItem,
     getBlogMdxListItems,
