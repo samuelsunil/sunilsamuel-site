@@ -67,49 +67,18 @@ export const handle: SVSHandle = {
   },
 }
 
-// export const action: SVSAction<{slug: string}> = async ({params}) => {
-//   const {slug} = params
-//   const session = await getSession()
-//   const user = await session.getUser()
-//   const headers = new Headers()
+export const action: SVSAction<{slug: string}> = async ({params}) => {
+  const {slug} = params
+  // const session = await getSession()
+  // const user = await session.getUser()
+  const headers = new Headers()
 
 
+  // trigger an update to the ranking cache and notify when the leader changed
 
-//   // trigger an update to the ranking cache and notify when the leader changed
-//   const [afterPostLeader, afterOverallLeader] = await Promise.all([
-//     getBlogReadRankings({request, slug: params.slug, forceFresh: true}).then(
-//       getRankingLeader,
-//     ),
-//     getBlogReadRankings({request, forceFresh: true}).then(getRankingLeader),
-//   ])
 
-//   if (
-//     afterPostLeader?.team &&
-//     afterPostLeader.team !== beforePostLeader?.team
-//   ) {
-//     await notifyOfTeamLeaderChangeOnPost({
-//       request,
-//       postSlug: slug,
-//       reader: user,
-//       newLeader: afterPostLeader.team,
-//       prevLeader: beforePostLeader?.team,
-//     })
-//   }
-//   if (
-//     afterOverallLeader?.team &&
-//     afterOverallLeader.team !== beforeOverallLeader?.team
-//   ) {
-//     await notifyOfOverallTeamLeaderChange({
-//       request,
-//       postSlug: slug,
-//       reader: user,
-//       newLeader: afterOverallLeader.team,
-//       prevLeader: beforeOverallLeader?.team,
-//     })
-//   }
-
-//   return json({success: true, headers})
-// }
+  return json({success: true, headers})
+}
 
 type CatchData = {
   recommendations: Array<MdxListItem>
