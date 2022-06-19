@@ -29,7 +29,7 @@ function BlogSection({
       />
       <Spacer size="2xs" />
       <Grid className="gap-y-16">
-        {articles.slice(0, 3).map((article, idx) => (
+        {articles && articles.slice(0, 3).map((article, idx) => (
           <div
             key={article.slug}
             className={clsx('col-span-4', {

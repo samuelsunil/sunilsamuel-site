@@ -3,13 +3,18 @@ import * as React from 'react'
 import * as mdxBundler from 'mdx-bundler/client'
 import type {LoaderData as RootLoaderData} from '../root'
 import type { GitHubFile,MdxListItem, MdxPage} from '~/types'
-import { typedBoolean } from '~/utils/misc'
+import {AnchorOrLink, typedBoolean } from '~/utils/misc'
 import {
     downloadDirList,
     downloadMdxFileOrDirectory,
   } from '~/utils/github.server'
   import {compileMdx} from '~/utils/compile-mdx.server'
-
+  import {Themed} from './theme-provider'
+  import {
+    getImageBuilder,
+    getImgProps,
+    getSocialImageWithPreTitle,
+  } from '~/images'
 
 
   // type CachifiedOptions = {
@@ -104,7 +109,7 @@ async function getMdxPagesInDirectory(
         compileMdxCached({contentDir, ...pageData}),
       ),
     )
-    console.log("PAGESSSSSSS+=============================", pages )
+    
     return  pages.filter(typedBoolean)
   }
 
@@ -120,7 +125,7 @@ async function getMdxPagesInDirectory(
     files: Array<GitHubFile>  
   }) {
     try{
-        console.log("TEST+=============================", slug, files )
+        
         const compiledPage = await compileMdx<MdxPage['frontmatter']>(slug, files)
         if (compiledPage) {
         //   if (
@@ -222,7 +227,7 @@ function mdxPageMeta({
     return {
       title: 'Not found',
       description:
-        'You landed on a page that Kody the Coding Koala could not find 🐨😢',
+        'You landed on a page that Sunil  could not find 😢',
     }
   }
 }
@@ -244,6 +249,57 @@ async function getBlogMdxListItems() {
 
         return pages.map(mapFromMdxPageToMdxListItem)
   }
+
+
+
+function BlogImage({
+  cloudinaryId,
+  imgProps,
+}: {
+  cloudinaryId: string
+  imgProps: JSX.IntrinsicElements['img']
+}) {
+  return (
+    <img
+      className="w-full rounded-lg object-cover py-8"
+      {...getImgProps(getImageBuilder(cloudinaryId, imgProps.alt), {
+        widths: [350, 550, 700, 845, 1250, 1700, 2550],
+        sizes: [
+          '(max-width:1023px) 80vw',
+          '(min-width:1024px) and (max-width:1620px) 50vw',
+          '850px',
+        ],
+        transformations: {background: 'rgb:e6e9ee'},
+      })}
+      {...imgProps}
+    />
+  )
+}
+
+  function ThemedBlogImage({
+    darkCloudinaryId,
+    lightCloudinaryId,
+    imgProps,
+  }: {
+    darkCloudinaryId: string
+    lightCloudinaryId: string
+    imgProps: JSX.IntrinsicElements['img']
+  }) {
+    return (
+      <Themed
+        light={<BlogImage cloudinaryId={lightCloudinaryId} imgProps={imgProps} />}
+        dark={<BlogImage cloudinaryId={darkCloudinaryId} imgProps={imgProps} />}
+      />
+    )
+  }
+  
+
+const mdxComponents = {
+  a: AnchorOrLink,
+  Themed,
+  ThemedBlogImage,
+  BlogImage,
+}
 
   /**
  * This should be rendered within a useMemo

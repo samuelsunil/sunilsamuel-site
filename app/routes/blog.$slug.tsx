@@ -469,19 +469,6 @@ export default function MdxScreen() {
 
       <Spacer size="base" />
 
-      {data.workshops.length > 0 ? (
-        <>
-          <HeaderSection
-            title="Want to learn more?"
-            subTitle="Join Kent in a live workshop"
-          />
-          <Spacer size="2xs" />
-
-          
-
-          <Spacer size="base" />
-        </>
-      ) : null}
 
       <BlogSection
         articles={data.recommendations}
