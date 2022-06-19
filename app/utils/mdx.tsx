@@ -321,6 +321,7 @@ function getMdxComponent(code: string) {
 }
 
   function useMdxComponent(code: string) {
+    console.table(code)
     return React.useMemo(() => getMdxComponent(code), [code])
   }
   

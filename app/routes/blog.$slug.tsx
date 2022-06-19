@@ -327,7 +327,7 @@ export default function MdxScreen() {
   }, [markAsRead])
   const {slug} = params
   const Component = useMdxComponent(code)
-
+  console.log("What IS component", Component)
   const permalink = `${requestInfo.origin}/blog/${slug}`
 
   const readMarker = React.useRef<HTMLDivElement>(null)
@@ -344,11 +344,8 @@ export default function MdxScreen() {
   return (
     <div
       key={slug}
-      className={
-        data.leadingTeam
-          ? `set-color-team-current-${data.leadingTeam.toLowerCase()}`
-          : ''
-      }
+      className="set-color-team-current-blue"
+        
     >
       
 

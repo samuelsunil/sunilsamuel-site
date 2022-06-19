@@ -159,7 +159,7 @@ function BlogHome() {
 const searchInputPlaceholder = 'Search posts';
 
   return (
-    <div className="set-color-team-current-blue)}">
+    <div className="set-color-team-current-blue">
       <HeroSection
         title="Learn development with great articles."
         
