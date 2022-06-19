@@ -155,80 +155,6 @@ export const headers: HeadersFunction = reuseUsefulLoaderHeaders
 
 export const meta = mdxPageMeta
 
-function useOnRead({
-  parentElRef,
-  time,
-  onRead,
-}: {
-  parentElRef: React.RefObject<HTMLElement>
-  time: number | undefined
-  onRead: () => void
-}) {
-  React.useEffect(() => {
-    const parentEl = parentElRef.current
-    if (!parentEl || !time) return
-
-    const visibilityEl = document.createElement('div')
-
-    let scrolledTheMain = false
-    const observer = new IntersectionObserver(entries => {
-      const isVisible = entries.some(entry => {
-        return entry.target === visibilityEl && entry.isIntersecting
-      })
-      if (isVisible) {
-        scrolledTheMain = true
-        maybeMarkAsRead()
-        observer.disconnect()
-        visibilityEl.remove()
-      }
-    })
-
-    let startTime = new Date().getTime()
-    let timeoutTime = time * 0.6
-    let timerId: ReturnType<typeof setTimeout>
-    let timerFinished = false
-    function startTimer() {
-      timerId = setTimeout(() => {
-        timerFinished = true
-        document.removeEventListener('visibilitychange', handleVisibilityChange)
-        maybeMarkAsRead()
-      }, timeoutTime)
-    }
-
-    function handleVisibilityChange() {
-      if (document.hidden) {
-        clearTimeout(timerId)
-        const timeElapsedSoFar = new Date().getTime() - startTime
-        timeoutTime = timeoutTime - timeElapsedSoFar
-      } else {
-        startTime = new Date().getTime()
-        startTimer()
-      }
-    }
-
-    function maybeMarkAsRead() {
-      if (timerFinished && scrolledTheMain) {
-        cleanup()
-        onRead()
-      }
-    }
-
-    // dirty-up
-    parentEl.append(visibilityEl)
-    observer.observe(visibilityEl)
-    startTimer()
-    document.addEventListener('visibilitychange', handleVisibilityChange)
-
-    function cleanup() {
-      document.removeEventListener('visibilitychange', handleVisibilityChange)
-      clearTimeout(timerId)
-      observer.disconnect()
-      visibilityEl.remove()
-    }
-    return cleanup
-  }, [time, onRead, parentElRef])
-}
-
 function ArticleFooter({
   editLink,
   permalink,
@@ -320,34 +246,22 @@ export default function MdxScreen() {
 
   const {code, frontmatter} = data.page
   const params = useParams()
-  const markAsRead = useFetcher()
-  const markAsReadRef = React.useRef(markAsRead)
-  React.useEffect(() => {
-    markAsReadRef.current = markAsRead
-  }, [markAsRead])
+
   const {slug} = params
   const Component = useMdxComponent(code)
   console.log("What IS component", Component)
   const permalink = `${requestInfo.origin}/blog/${slug}`
 
-  const readMarker = React.useRef<HTMLDivElement>(null)
+  
   const isDraft = Boolean(data.page.frontmatter.draft)
-  useOnRead({
-    parentElRef: readMarker,
-    time: data.page.readTime?.time,
-    onRead: React.useCallback(() => {
-      if (isDraft) return
-      markAsReadRef.current.submit({}, {method: 'post'})
-    }, [isDraft]),
-  })
+
 
   return (
     <div
       key={slug}
       className="set-color-team-current-blue"
-        
-    >
       
+    >
 
       <Grid as="header" className="mb-12">
         <div className="col-span-full lg:col-span-8 lg:col-start-3">
@@ -403,53 +317,7 @@ export default function MdxScreen() {
         ) : null}
       </Grid>
 
-      <main ref={readMarker}>
-        <Grid className="mb-24">
-          <div className="col-span-full lg:col-start-3">
-            <div className="flex flex-wrap">
-              {frontmatter.translations?.length ? (
-                <>
-                  <ul className="col-span-full -mb-4 -mr-4 flex flex-wrap lg:col-span-10 lg:col-start-3">
-                    {frontmatter.translations.map(({language, link}) => (
-                      <li key={`${language}:${link}`}>
-                        <a
-                          href={link}
-                          className="focus-ring bg-secondary text-primary relative mb-4 mr-4 block h-auto w-auto whitespace-nowrap rounded-full px-6 py-3"
-                        >
-                          {language}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                  <a
-                    href={externalLinks.translationContributions}
-                    className="text-secondary underlined focus:outline-none my-3 mb-6 ml-5 block text-lg font-medium hover:text-team-current focus:text-team-current"
-                    target="_blank"
-                    rel="noreferrer noopener"
-                  >
-                    Add translation
-                  </a>
-                </>
-              ) : (
-                <>
-                  <span className="text-secondary text-lg italic">
-                    No translations available.
-                  </span>
-
-                  <a
-                    href={externalLinks.translationContributions}
-                    className="text-secondary underlined focus:outline-none ml-5 block text-lg font-medium hover:text-team-current focus:text-team-current"
-                    target="_blank"
-                    rel="noreferrer noopener"
-                  >
-                    Add translation
-                  </a>
-                </>
-              )}
-            </div>
-          </div>
-        </Grid>
-
+      <main >
         <Grid as="main" className="prose prose-light mb-24 dark:prose-dark">
           <Component />
         </Grid>
