@@ -303,7 +303,7 @@ function ArticleFooter({
         <H6 as="div">Written by Sunil Samuel</H6>
         <Paragraph className="mb-12 mt-3">
           {`
-Sunil Sam is a JavaScript software engineer and teacher. Sunil's taught hundreds of
+Sunil Samuel is a JavaScript software engineer and teacher. Sunil's taught hundreds of
 people how to make the world a better place with quality software development tools
 and practices. He lives with his wife and his son in Bangalore, India.
           `.trim()}
