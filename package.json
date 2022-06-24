@@ -9,14 +9,15 @@
     "build:css:prod": "npm run build:css -- --env production",
     "build:remix": "cross-env NODE_ENV=production dotenv -e .env remix build --sourcemap",
     "build:server": "node ./other/build-server.js",
-    "build": "npm run build:css:prod && npm run build:remix",
+    "build": "npm run build:css:prod && npm run build:remix && npm run build:server && node ./other/generate-build-info",
     "dev": "pm2-dev ./other/pm2.config.js",
     "dev:old": "concurrently \"npm:dev:tailwind\" \"npm:dev:web\"",
     "dev:tailwind": "tailwindcss --output ./app/styles/tailwind.css --config ./tailwind.config.js --watch",
     "dev:web": "remix dev",
     "postinstall": "remix setup node",
     "deploy": "fly deploy --remote-only",
-    "start": "remix-serve build",
+    "start": "cross-env NODE_ENV=production node --require ./node_modules/dotenv/config ./index.js",
+    "start:old": "remix-serve build",
     "setup": "npm install && docker compose up -d && npm run prime-cache:mocks"
   },
   "dependencies": {
@@ -40,6 +41,7 @@
     "chalk": "^4.1.2",
     "cloudinary-build-url": "^0.2.4",
     "clsx": "^1.1.1",
+    "cross-env": "^7.0.3",
     "date-fns": "^2.27.0",
     "dotenv": "^10.0.0",
     "error-stack-parser": "^2.0.6",
@@ -47,6 +49,7 @@
     "express": "^4.17.2",
     "express-http-proxy": "^1.6.3",
     "framer-motion": "^6.2.1",
+    "fs-extra": "^10.1.0",
     "match-sorter": "^6.3.1",
     "md5-hash": "^1.0.1",
     "mdast-util-to-hast": "^12.1.1",
@@ -124,7 +127,8 @@
     "typescript": "4.4.4"
   },
   "engines": {
-    "node": ">=14"
+    "node": "16",
+    "npm": "8"
   },
   "sideEffects": false,
   "eslintIgnore": [
