@@ -40,7 +40,7 @@ export type HeroSectionProps = {
       imageProps?: never
       imageSize?: 'medium' | 'large' | 'giant'
       image?: never
-     // imageBuilder: ImageBuilder
+      imageBuilder: ImageBuilder
       imageTransformations?: TransformerOption
     }
 ) &
@@ -63,11 +63,11 @@ function HeroSection({
   arrowLabel,
   image,
   imageProps,
- // imageBuilder,
+  imageBuilder,
   imageSize = 'medium',
   as = 'header',
 }: HeroSectionProps) {
-  const hasImage = false // Boolean(image ?? imageProps ?? imageBuilder)
+  const hasImage =  Boolean(image ?? imageProps ?? imageBuilder)
   const shouldReduceMotion = useReducedMotion()
 
   const childVariants = {

@@ -1,9 +1,17 @@
 import * as React from "react";
 import type { LoaderFunction, HeadersFunction, MetaFunction } from "remix";
+import type {Timings} from '~/utils/metrics.server'
 import { Link, json, useLoaderData, useSearchParams } from "remix";
-import type { Await, SVSHandle, MdxListItem, Team } from "~/types";
+import type {LoaderData as RootLoaderData} from '../root'
+import type { Await, SVSHandle, MdxListItem } from "~/types";
 import { MixedCheckbox } from "@reach/checkbox";
 import clsx from "clsx";
+import {
+  // getImageBuilder,
+  // getImgProps,
+  getSocialImageWithPreTitle,
+  images,
+} from '~/images'
 import {HeroSection} from '~/components/sections/hero-section'
 import {Tag} from '~/components/tag'
 import {Spacer} from '~/components/spacer'
@@ -15,18 +23,19 @@ import { useRootData } from "~/utils/use-root-data";
 import { Grid } from "~/components/grid";
 import { getBlogMdxListItems } from "~/utils/mdx";
 import {
-  // formatAbbreviatedNumber,
-  // formatDate,
-  // formatNumber,
-  // getDisplayUrl,
-  // getUrl,
-  // isTeam,
-  // reuseUsefulLoaderHeaders,
+  formatAbbreviatedNumber,
+  formatDate,
+  formatNumber,
+  getDisplayUrl,
+  getUrl,
+  reuseUsefulLoaderHeaders,
   useUpdateQueryStringValueWithoutNavigation,
 } from "~/utils/misc";
 //import {filterPosts} from '~/utils/blog'
 import { ServerError } from "~/components/errors";
 import { filterPosts } from "~/utils/blog";
+import {getSocialMetas} from '~/utils/seo'
+
 
 const handleId = "blog";
 export const handle: SVSHandle = {
@@ -47,10 +56,10 @@ type LoaderData = {
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  // const timings: Timings = {}
+   const timings: Timings = {}
 
   const [posts] = await Promise.all([
-    getBlogMdxListItems().then((allPosts) =>
+    getBlogMdxListItems({request, timings}).then((allPosts) =>
       allPosts.filter((p) => !p.frontmatter.draft)
     ),
   ]);
@@ -76,6 +85,36 @@ export const loader: LoaderFunction = async ({ request }) => {
     },
   });
 };
+
+export const headers: HeadersFunction = reuseUsefulLoaderHeaders
+
+export const meta: MetaFunction = ({data, parentsData}) => {
+  const {requestInfo} = parentsData.root as RootLoaderData
+  
+
+  return {
+    ...getSocialMetas({
+      origin: requestInfo.origin,
+      title: 'Blogging With Sammy',
+      description: `Join the 1000+ people who have read Sammy's articles on JavaScript, TypeScript, React, Engineering Management, Career, and more.`,
+      keywords:
+        'JavaScript, TypeScript, React, Testing, Career, Software Development, Sunil Samuel, With Sammy Blog',
+      url: getUrl(requestInfo),
+      image: getSocialImageWithPreTitle({
+        origin: requestInfo.origin,
+        url: getDisplayUrl(requestInfo),
+        featuredImage: images.happyTraveler.id,
+        preTitle: 'Check out this Blog',
+        title: `Priceless insights, ideas, and experiences for your dev work`,
+      }),
+    }),
+  }
+}
+
+// should be divisible by 3 and 2 (large screen, and medium screen).
+// const PAGE_SIZE = 12
+// const initialIndexToShow = PAGE_SIZE
+
 
 function BlogHome() {
   const {requestInfo} = useRootData()
@@ -162,8 +201,7 @@ const searchInputPlaceholder = 'Search posts';
     <div className="set-color-team-current-blue">
       <HeroSection
         title="Learn development with great articles."
-        
-        // imageBuilder={images.skis}
+         imageBuilder={images.happyTraveler}
         action={
           <div className="w-full">
             <form

@@ -20,7 +20,7 @@ import {
 } from '~/utils/mdx'
 import {H2, H6, Paragraph} from '~/components/typography'
 import {Grid} from '~/components/grid'
-import {ArrowLink} from '~/components/arrow-button'
+import {ArrowLink, BackLink} from '~/components/arrow-button'
 import {BlogSection} from '~/components/sections/blog-section'
 // import {
 //   getBlogReadRankings,
@@ -230,6 +230,11 @@ export default function MdxScreen() {
       className="set-color-team-current-blue"
       
     >
+            <Grid className="mb-10 mt-24 lg:mb-24">
+        <div className="col-span-full flex justify-between lg:col-span-8 lg:col-start-3">
+          <BackLink to="/blog">Back to overview</BackLink>
+        </div>
+      </Grid>
 
       <Grid as="header" className="mb-12">
         <div className="col-span-full lg:col-span-8 lg:col-start-3">

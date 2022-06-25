@@ -42,7 +42,7 @@ const images = createImages({
     alt: `Sunil's signature`,
   },
   sunilTransparentProfile: {
-    id: 'sunil/profile-transparent',
+    id: 'withsammy/profile/profile_1',
     alt: 'Sunil Samuel',
   },
   sunilProfile: {
@@ -52,20 +52,22 @@ const images = createImages({
   sunilSnowSports: {
     id: 'sunil/snow-sports',
     alt: 'Sunil wearing snow clothes with skis and a snowboard',
+  },
+  happyTraveler: {
+    id: 'withsammy/illustrations/happy_traveler_1',
+    alt: 'Happy Traveler with a camera',
+  },
+  happyPhotographer: {
+    id: 'withsammy/illustrations/happy_photographer',
+    alt: 'Happy Photographer',
   }
 })
 
 
-// const illustrationImages = {
-//   teslaY: images.teslaY,
-//   solarPanels: images.solarPanels,
-//   snowboard: images.snowboard,
-//   skis: images.skis,
-//   kayak: images.kayak,
-//   onewheel: images.onewheel,
-//   microphone: images.microphone,
-//   helmet: images.helmet,
-// }
+const illustrationImages = {
+  happyTraveler: images.happyTraveler,
+  happyPhotographer: images.happyPhotographer
+}
 
 function getImgProps(
   imageBuilder: ImageBuilder,
@@ -155,6 +157,6 @@ export {
   getImageBuilder,
   getGenericSocialImage,
   getSocialImageWithPreTitle,
-  //illustrationImages,
+  illustrationImages,
 }
 export type {ImageBuilder}
