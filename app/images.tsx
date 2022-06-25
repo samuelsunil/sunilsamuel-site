@@ -62,7 +62,7 @@ const images = createImages({
     alt: 'Happy Photographer',
   },
   potential: {
-    id: 'withsammy/impossible',
+    id: 'withsammy/432839078_tjoezc',
     alt: 'Depiction of Impossible',
   }
 })
