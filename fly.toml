@@ -1,41 +1,17 @@
-# fly.toml file generated for samuelsunil-me on 2022-06-24T12:04:53+05:30
+# fly.toml file generated for sunilsamuel-redis-me on 2022-06-25T10:39:50+05:30
 
-app = "samuelsunil-me"
+app = "sunilsamuel-redis-me"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
 
+[build]
+  image = "flyio/redis:6.2.6"
+
 [env]
-  PORT = "8080"
-  NODE_ENV = "production"
-  FLY = "true"
 
 [experimental]
   allowed_public_ports = []
   auto_rollback = true
 
 [[services]]
-  http_checks = []
-  internal_port = 8080
-  processes = ["app"]
-  protocol = "tcp"
-  script_checks = []
-  [services.concurrency]
-    hard_limit = 25
-    soft_limit = 20
-    type = "connections"
-
-  [[services.ports]]
-    force_https = true
-    handlers = ["http"]
-    port = 80
-
-  [[services.ports]]
-    handlers = ["tls", "http"]
-    port = 443
-
-  [[services.tcp_checks]]
-    grace_period = "1s"
-    interval = "15s"
-    restart_limit = 0
-    timeout = "2s"
