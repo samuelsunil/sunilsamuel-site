@@ -60,6 +60,10 @@ const images = createImages({
   happyPhotographer: {
     id: 'withsammy/illustrations/happy_photographer',
     alt: 'Happy Photographer',
+  },
+  potential: {
+    id: 'withsammy/impossible',
+    alt: 'Depiction of Impossible',
   }
 })
 

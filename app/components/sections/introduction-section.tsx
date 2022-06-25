@@ -9,18 +9,14 @@ function IntroductionSection() {
   const [searchParams] = useSearchParams()
   return (
     <Grid>
-      <div className="col-span-full lg:col-span-4">
-        
-      </div>
+      <div className="col-span-full lg:col-span-4" />
       <div className="col-span-full mt-12 lg:col-span-6 lg:col-start-6 lg:mt-0">
         <H2 id="intro">
-          {`Hi, I'm Sunil Samuel. I help people make the world better through quality software.`}
+          {`Hi, I'm Sunil Samuel. My friends call me Sammy. I am currently an Engineering Leader at Walmart.In addition, I help others realise their full potential and contribute to a more positive future for all of us.`}
         </H2>
         <H3 variant="secondary" as="p" className="mt-12">
           {`
-            I'm also a big extreme sports enthusiast. When I'm not hanging out
-            with my family or at the computer you can find me cruising around on
-            my onewheel or hitting the slopes on my snowboard when it's cold.
+            I'm also a wildlife and travel photographer. When I'm not at the computer you can find me hanging out with my family or reading a book or just traveling
           `}
         </H3>
         <ArrowLink
