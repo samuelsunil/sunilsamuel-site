@@ -1,6 +1,6 @@
 # fly.toml file generated for sunilsamuel-redis-me on 2022-06-25T10:39:50+05:30
 
-app = "sunilsamuel-redis-me"
+app = "samuelsunil-me-redis"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
@@ -14,4 +14,8 @@ processes = []
   allowed_public_ports = []
   auto_rollback = true
 
-[[services]]
+[[services]]  
+
+[[mounts]]
+    destination = "/data"
+    source = "redis_server"

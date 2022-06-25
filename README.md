@@ -3,3 +3,17 @@
 - [Remix Docs](https://remix.run/docs)
 
 My Attempt at rebuilding a lightweight version (template) of sunilvsamuel.com
+
+
+
+
+## References
+
+- [kentcdodds.com](https://kentcdodds.com)
+
+  ### Fly.io links
+   - https://fly.io/docs/getting-started/remix/
+   - https://fly.io/docs/reference/secrets/
+   - https://fly.io/docs/reference/redis/
+   - https://community.fly.io/t/cloudflare-fly-for-better-performance/1595/15
+   
