@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {useLoaderData, json, useFetcher, useCatch, useParams} from 'remix'
+import {useLoaderData, json, useCatch, useParams} from 'remix'
 import type {HeadersFunction} from 'remix'
 import type {
   SVSAction,
@@ -7,8 +7,6 @@ import type {
   SVSLoader,
   MdxListItem,
   MdxPage,
-  Team,
-  Workshop,
 } from '~/types'
 import {useRootData} from '~/utils/use-root-data'
 import {getImageBuilder, getImgProps, images} from '~/images'
@@ -22,7 +20,7 @@ import {
 } from '~/utils/mdx'
 import {H2, H6, Paragraph} from '~/components/typography'
 import {Grid} from '~/components/grid'
-import {ArrowLink, BackLink} from '~/components/arrow-button'
+import {ArrowLink} from '~/components/arrow-button'
 import {BlogSection} from '~/components/sections/blog-section'
 // import {
 //   getBlogReadRankings,
@@ -36,13 +34,13 @@ import {FourOhFour, ServerError} from '~/components/errors'
 // import {TeamStats} from '~/components/team-stats'
 import type {Timings} from '~/utils/metrics.server'
 import {getServerTimeHeader} from '~/utils/metrics.server'
-import {formatDate, formatNumber, reuseUsefulLoaderHeaders} from '~/utils/misc'
+import {formatDate, reuseUsefulLoaderHeaders} from '~/utils/misc'
 import {BlurrableImage} from '~/components/blurrable-image'
 // import {getSession} from '~/utils/session.server'
 // // import {addPostRead} from '~/utils/prisma.server'
 // import {getClientSession} from '~/utils/client.server'
 // import {getRankingLeader} from '~/utils/blog'
-import {externalLinks} from '../external-links'
+// import {externalLinks} from '../external-links'
 // import {teamEmoji, useTeam} from '~/utils/team-provider'
 // import {getWorkshops} from '~/utils/workshops.server'
 // import {
@@ -52,13 +50,13 @@ import {externalLinks} from '../external-links'
 // import {WorkshopCard} from '~/components/workshop-card'
 import {Spacer} from '~/components/spacer'
 import clsx from 'clsx'
-import {HeaderSection} from '~/components/sections/header-section'
+// import {HeaderSection} from '~/components/sections/header-section'
 
 const handleId = 'blog-post'
 export const handle: SVSHandle = {
   id: handleId,
   getSitemapEntries: async request => {
-    const pages = await getBlogMdxListItems()
+    const pages = await getBlogMdxListItems({request})
     return pages
       .filter(page => !page.frontmatter.draft)
       .map(page => {
@@ -68,7 +66,7 @@ export const handle: SVSHandle = {
 }
 
 export const action: SVSAction<{slug: string}> = async ({params}) => {
-  const {slug} = params
+  // const {slug} = params
   // const session = await getSession()
   // const user = await session.getUser()
   const headers = new Headers()
@@ -84,11 +82,11 @@ type CatchData = {
   recommendations: Array<MdxListItem>
   totalReads: string
 }
-type LoaderData =  {
+type LoaderData = CatchData &  {
   page: MdxPage
 }
 
-export const loader: SVSLoader<{slug: string}> = async ({ params}) => {
+export const loader: SVSLoader<{slug: string}> = async ({request, params}) => {
   // the loader won't handle this anyway, we've got this handled in other-routes.server.ts
   if (params.slug === 'rss.xml') return null
 
@@ -97,7 +95,8 @@ export const loader: SVSLoader<{slug: string}> = async ({ params}) => {
     {
       contentDir: 'blog',
       slug: params.slug,
-    }
+    },
+    {request, timings},
   )
 
   const headers = {

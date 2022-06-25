@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import * as React from 'react'
 import * as mdxBundler from 'mdx-bundler/client'
+import {buildImageUrl} from 'cloudinary-build-url'
 import type {LoaderData as RootLoaderData} from '../root'
 import type { GitHubFile,MdxListItem, MdxPage} from '~/types'
 import {AnchorOrLink, typedBoolean } from '~/utils/misc'
@@ -15,15 +16,26 @@ import {
     getImgProps,
     getSocialImageWithPreTitle,
   } from '~/images'
+  import {redisCache} from './redis.server'
+  import {cachified} from './cache.server'
+  import type {Timings} from './metrics.server'
 
+  type CachifiedOptions = {
+    forceFresh?: boolean | string
+    request?: Request
+    timings?: Timings
+    maxAge?: number
+    expires?: Date
+  }
 
-  // type CachifiedOptions = {
-  //   forceFresh?: boolean | string
-  //   request?: Request
-  //   timings?: Timings
-  //   maxAge?: number
-  //   expires?: Date
-  // }
+const defaultMaxAge = 1000 * 60 * 60 * 24 * 30
+
+const getCompiledKey = (contentDir: string, slug: string) =>
+  `${contentDir}:${slug}:compiled`
+const checkCompiledValue = (value: unknown) =>
+  typeof value === 'object' &&
+  (value === null || ('code' in value && 'frontmatter' in value))
+
 
 /**
  * This is useful for when you don't want to send all the code for a page to the client.
@@ -33,12 +45,46 @@ import {
     return mdxListItem
   }
 
+  const getDownloadKey = (contentDir: string, slug: string) =>
+  `${contentDir}:${slug}:downloaded`
+
+
   async function downloadMdxFilesCached(
     contentDir: string,
-    slug: string
+    slug: string,
+    options: CachifiedOptions,
   ) {
-    
-    const downloaded = await downloadMdxFileOrDirectory(`${contentDir}/${slug}`);
+    const key = getDownloadKey(contentDir, slug)
+    const downloaded = await cachified({
+      cache: redisCache,
+      maxAge: defaultMaxAge,
+      ...options,
+      key,
+      checkValue: (value: unknown) => {
+        if (typeof value !== 'object') {
+          return `value is not an object`
+        }
+        if (value === null) {
+          return `value is null`
+        }
+  
+        const download = value as Record<string, unknown>
+        if (!Array.isArray(download.files)) {
+          return `value.files is not an array`
+        }
+        if (typeof download.entry !== 'string') {
+          return `value.entry is not a string`
+        }
+  
+        return true
+      },
+      getFreshValue: async () =>
+        downloadMdxFileOrDirectory(`${contentDir}/${slug}`),
+    })
+    // if there aren't any files, remove it from the cache
+    if (!downloaded.files.length) {
+      void redisCache.del(key)
+    }
     return downloaded
   }
   
@@ -65,13 +111,25 @@ const getDirListKey = (contentDir: string) => `${contentDir}:dir-list`
     }: {
       contentDir: string
       slug: string
-    }
-  ): Promise<MdxPage | null | undefined> {
-        const pageFiles = await downloadMdxFilesCached(contentDir, slug)
+    },
+    options: CachifiedOptions,
+  ): Promise<MdxPage | null > {
+    const key = getCompiledKey(contentDir, slug)
+    const page = await cachified({
+      cache: redisCache,
+      maxAge: defaultMaxAge,
+      ...options,
+      // reusing the same key as compiledMdxCached because we just return that
+      // exact same value. Cachifying this allows us to skip getting the cached files
+      key,
+      checkValue: checkCompiledValue,
+      getFreshValue: async () => {
+        const pageFiles = await downloadMdxFilesCached(contentDir, slug, options)
         const compiledPage = await compileMdxCached({
           contentDir,
           slug,
-          ...pageFiles
+          ...pageFiles,
+          options,
         }).catch(err => {
           console.error(`Failed to get a fresh value for mdx:`, {
             contentDir,
@@ -80,7 +138,14 @@ const getDirListKey = (contentDir: string) => `${contentDir}:dir-list`
           return Promise.reject(err)
         })
         return compiledPage
-      }
+      },
+    })
+    if (!page) {
+      // if there's no page, let's remove it from the cache
+      void redisCache.del(key)
+    }
+    return page
+  }
   
     // if (!page) {
     //   // if there's no page, let's remove it from the cache
@@ -90,7 +155,8 @@ const getDirListKey = (contentDir: string) => `${contentDir}:dir-list`
   
 
 async function getMdxPagesInDirectory(
-    contentDir: string
+    contentDir: string,
+    options: CachifiedOptions,
   ) {
     const dirList = await getMdxDirList(contentDir)
     
@@ -98,7 +164,7 @@ async function getMdxPagesInDirectory(
     const pageDatas = await Promise.all(
       dirList.map(async ({slug}) => {
         return {
-          ...(await downloadMdxFilesCached(contentDir, slug)),
+          ...(await downloadMdxFilesCached(contentDir, slug, options)),
           slug,
         }
       }),
@@ -106,14 +172,111 @@ async function getMdxPagesInDirectory(
     
     const pages = await Promise.all(
       pageDatas.map(pageData =>
-        compileMdxCached({contentDir, ...pageData}),
+        compileMdxCached({contentDir, ...pageData, options}),
       ),
     )
     
     return  pages.filter(typedBoolean)
   }
 
-  async function compileMdxCached({
+
+async function getBlurDataUrl(cloudinaryId: string) {
+  const imageURL = buildImageUrl(cloudinaryId, {
+    transformations: {
+      resize: {width: 100},
+      quality: 'auto',
+      format: 'webp',
+      effect: {
+        name: 'blur',
+        value: '1000',
+      },
+    },
+  })
+  const dataUrl = await getDataUrlForImage(imageURL)
+  return dataUrl
+}
+
+
+async function getDataUrlForImage(imageUrl: string) {
+  const res = await fetch(imageUrl)
+  const arrayBuffer = await res.arrayBuffer()
+  const base64 = Buffer.from(arrayBuffer).toString('base64')
+  const mime = res.headers.get('Content-Type') ?? 'image/webp'
+  const dataUrl = `data:${mime};base64,${base64}`
+  return dataUrl
+}
+
+async function compileMdxCached({
+  contentDir,
+  slug,
+  entry,
+  files,
+  options,
+}: {
+  contentDir: string
+  slug: string
+  entry: string
+  files: Array<GitHubFile>
+  options: CachifiedOptions
+}) {
+  const key = getCompiledKey(contentDir, slug)
+  const page = await cachified({
+    cache: redisCache,
+    maxAge: defaultMaxAge,
+    ...options,
+    key,
+    checkValue: checkCompiledValue,
+    getFreshValue: async () => {
+      const compiledPage = await compileMdx<MdxPage['frontmatter']>(slug, files)
+      if (compiledPage) {
+        if (
+          compiledPage.frontmatter.bannerCloudinaryId &&
+          !compiledPage.frontmatter.bannerBlurDataUrl
+        ) {
+          try {
+            compiledPage.frontmatter.bannerBlurDataUrl = await getBlurDataUrl(
+              compiledPage.frontmatter.bannerCloudinaryId,
+            )
+          } catch (error: unknown) {
+            console.error(
+              'oh no, there was an error getting the blur image data url',
+              error,
+            )
+          }
+        }
+        // if (compiledPage.frontmatter.bannerCredit) {
+        //   const credit = await markdownToHtmlUnwrapped(
+        //     compiledPage.frontmatter.bannerCredit,
+        //   )
+        //   compiledPage.frontmatter.bannerCredit = credit
+        //   const noHtml = await stripHtml(credit)
+        //   if (!compiledPage.frontmatter.bannerAlt) {
+        //     compiledPage.frontmatter.bannerAlt = noHtml
+        //       .replace(/(photo|image)/i, '')
+        //       .trim()
+        //   }
+        //   if (!compiledPage.frontmatter.bannerTitle) {
+        //     compiledPage.frontmatter.bannerTitle = noHtml
+        //   }
+        // }
+        return {
+          ...compiledPage,
+          slug,
+          editLink: `https://github.com/samuelsunil/sunilsamuel-site/edit/main/${entry}`,
+        }
+      } else {
+        return null
+      }
+    },
+  })
+  // if there's no page, remove it from the cache
+  if (!page) {
+    void redisCache.del(key)
+  }
+  return page
+}
+
+  async function compileMdxCachedOld({
     contentDir,
     slug,
     entry,
@@ -239,8 +402,8 @@ function getBannerTitleProp(frontmatter: MdxPage['frontmatter']) {
   )
 }
 
-async function getBlogMdxListItems() {
-        let pages = await getMdxPagesInDirectory('blog')
+async function getBlogMdxListItems(options: CachifiedOptions) {
+        const pages = await getMdxPagesInDirectory('blog', options)
         // pages = pages.sort((a, z) => {
         //   const aTime = new Date(a.frontmatter.date ?? '').getTime()
         //   const zTime = new Date(z.frontmatter.date ?? '').getTime()
