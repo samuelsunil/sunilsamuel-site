@@ -172,6 +172,8 @@ export const links: LinksFunction = () => {
     {rel: 'stylesheet', href: tailwindStyles},
     {rel: 'stylesheet', href: proseStyles},
     {rel: 'stylesheet', href: appStyles},
+    {rel:"preconnect", href:"https://polyfill.io"},
+    {rel:"dns-prefetch", href:"https://polyfill.io"}
   ]
 }
 
