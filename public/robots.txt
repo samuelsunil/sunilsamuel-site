@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://withsammy.com/sitemap.xml

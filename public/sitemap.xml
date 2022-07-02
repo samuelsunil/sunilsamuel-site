@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"> 
+<url>
+  <loc>http://withsammy.com/</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://withsammy.com/blog</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://withsammy.com/book-reviews</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://withsammy.com/about</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://withsammy.com/#intro</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://withsammy.com/blog/automation</loc>
+  <changefreq>weekly</changefreq>
+</url>
+<url>
+  <loc>http://withsammy.com/blog/new-post</loc>
+  <changefreq>weekly</changefreq>
+</url>
+</urlset>
