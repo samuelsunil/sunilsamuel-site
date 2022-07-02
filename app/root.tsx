@@ -36,6 +36,8 @@ import proseStyles from '~/styles/prose.css'
 import {ErrorPage} from './components/errors'
 import {Navbar} from './components/navbar'
 import type { SVSHandle, } from '~/types'
+import {getSocialMetas} from './utils/seo'
+import {getGenericSocialImage} from './images'
 import {ArrowLink} from './components/arrow-button'
 import {getThemeSession} from './utils/theme.server'
 
@@ -61,12 +63,28 @@ export type LoaderData = {
 
 export const meta: MetaFunction = ({data}) => {
   const requestInfo = (data as LoaderData | undefined)?.requestInfo
-  const title = 'Sunil Samuel'
+  const title = 'With Sammy'
   const description =
-    'Come check out how Sunil Samuel can help you level up your career as a Software Engineer.'
+    'Come check out how Sammy can help you level up your career as an Engineering Leader.'
   return {
     viewport: 'width=device-width,initial-scale=1,viewport-fit=cover',
     'theme-color': '#A9ADC1',
+    ...getSocialMetas({
+      origin: requestInfo?.origin ?? '',
+      keywords:
+        'Learn Engineering Management and Leadership skills,Learn JavaScript, Learn TypeScript and Book reviews',
+      url: getUrl(requestInfo),
+      image: getGenericSocialImage({
+        origin: requestInfo?.origin ?? '',
+        url: getDisplayUrl(requestInfo),
+        words:
+          'Helping people to realize their full potential and contribute to a more positive future for all of us.',
+        featuredImage: '',
+      }),
+      title,
+      description,
+    }),
+
   }
 }
 
