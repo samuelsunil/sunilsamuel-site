@@ -2,7 +2,7 @@
 /// <reference types="@remix-run/node/globals" />
 
 import calculateReadingTime from 'reading-time'
-import type {ActionFunction, LoaderFunction} from 'remix'
+import type {ActionFunction, LoaderFunction} from '@remix-run/node'
 import type {User, Call, Session, Team, Role} from '@prisma/client'
 
 type NonNullProperties<Type> = {

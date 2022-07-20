@@ -1,17 +1,25 @@
 import * as React from 'react'
+import type {
+  HeadersFunction,
+  LinksFunction,
+  MetaFunction,
+  LoaderFunction,
+} from '@remix-run/node'
+import {json} from '@remix-run/node'
 import {
   Links,
   LiveReload,
-  LoaderFunction,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
-  useLoaderData,
   useCatch,
+  useLoaderData,
   useLocation,
-  json
-} from "remix";
+  useMatches,
+  useTransition,
+} from '@remix-run/react'
+// import {MetronomeLinks} from '@metronome-sh/react'
 import {
   getDisplayUrl,
   getDomainUrl,
@@ -19,7 +27,7 @@ import {
   removeTrailingSlash,
 } from './utils/misc'
 import {Spacer} from './components/spacer'
-import type {LinksFunction, MetaFunction} from "remix";
+
 import clsx from 'clsx'
 import {
   useTheme,
@@ -207,6 +215,7 @@ export  function App() {
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <Meta />
         <Links />
+        {/* {ENV.NODE_ENV === 'production' ? <MetronomeLinks /> : null} */}
         <script
           crossOrigin="anonymous"
           src="https://polyfill.io/v3/polyfill.min.js?features=Intl%2CIntl.ListFormat"
@@ -223,7 +232,7 @@ export  function App() {
             __html: `window.ENV = ${JSON.stringify(data.ENV)};`,
           }}
         /> */}
-        {process.env.NODE_ENV === "development" && <LiveReload />}
+        {process.env.NODE_ENV === 'development' ? <LiveReload /> : null}
       </body>
     </html>
   );

@@ -1,7 +1,13 @@
 import * as React from "react";
-import type { LoaderFunction, HeadersFunction, MetaFunction } from "remix";
+import type {
+  HeadersFunction,
+  LoaderFunction,
+  MetaFunction,
+} from '@remix-run/node'
+import {json} from '@remix-run/node'
+import {Link, useLoaderData, useSearchParams} from '@remix-run/react'
 import type {Timings} from '~/utils/metrics.server'
-import { Link, json, useLoaderData, useSearchParams } from "remix";
+
 import type {LoaderData as RootLoaderData} from '../root'
 import type { Await, SVSHandle, MdxListItem } from "~/types";
 import { MixedCheckbox } from "@reach/checkbox";

@@ -1,6 +1,6 @@
 import * as React from 'react'
-import type {HeadersFunction, LinkProps} from 'remix'
-import {Link} from 'remix'
+import type {HeadersFunction} from '@remix-run/node'
+import {Link, LinkProps} from '@remix-run/react'
 import type {NonNullProperties, User} from '~/types'
 //import {Team} from '@prisma/client'
 import * as dateFns from 'date-fns'
@@ -187,12 +187,12 @@ function getRequiredServerEnvVar(key: string, devValue?: string) {
   return getRequiredEnvVarFromObj(process.env, key, devValue)
 }
 
-// function getRequiredGlobalEnvVar(
-//   key: keyof ReturnType<typeof getEnv>,
-//   devValue?: string,
-// ) {
-//   return getRequiredEnvVarFromObj(ENV, key, devValue)
-// }
+function getRequiredGlobalEnvVar(
+  key: keyof ReturnType<typeof getEnv>,
+  devValue?: string,
+) {
+  return getRequiredEnvVarFromObj(ENV, key, devValue)
+}
 
 function getDomainUrl(request: Request) {
   const host =
@@ -340,7 +340,7 @@ export {
   useDebounce,
   typedBoolean,
   getRequiredServerEnvVar,
-  //getRequiredGlobalEnvVar,
+  getRequiredGlobalEnvVar,
   getDomainUrl,
   getUrl,
   getDisplayUrl,

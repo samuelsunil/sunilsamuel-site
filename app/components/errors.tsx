@@ -1,4 +1,4 @@
-import {useMatches} from 'remix'
+import {useMatches} from '@remix-run/react'
 import * as React from 'react'
 import errorStack from 'error-stack-parser'
 import clsx from 'clsx'
@@ -106,7 +106,7 @@ function ErrorPage({
 function FourOhFour({articles}: {articles?: Array<MdxListItem>}) {
   const matches = useMatches()
   const last = matches[matches.length - 1]
-  const pathname = last?.pathname
+  const pathname = last.pathname
 
   return (
     <ErrorPage
@@ -129,7 +129,7 @@ function ServerError({
 }) {
   const matches = useMatches()
   const last = matches[matches.length - 1]
-  const pathname = last?.pathname
+  const pathname = last.pathname
 
   return (
     <ErrorPage

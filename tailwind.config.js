@@ -7,11 +7,11 @@ module.exports = {
   content: 
     [fromRoot('./app/**/*.+(js|ts|tsx|mdx|md)')],
   
-  // purge: {
-  //   mode: 'layers',
-  //   enabled: process.env.NODE_ENV === 'production',
-  //   content: [fromRoot('./app/**/*.+(js|ts|tsx|mdx|md)')],
-  // },
+  purge: {
+    mode: 'layers',
+    enabled: process.env.NODE_ENV === 'production',
+    content: [fromRoot('./app/**/*.+(js|ts|tsx|mdx|md)')],
+  },
   darkMode: "class",
   variants: {
     opacity: ['responsive', 'hover', 'focus', 'dark', 'group-hover'],
@@ -325,6 +325,6 @@ module.exports = {
     require('@tailwindcss/typography'),
     require('@tailwindcss/aspect-ratio'),
     require('@tailwindcss/line-clamp'),
-    require('@tailwindcss/forms'),
+    
   ],
 }

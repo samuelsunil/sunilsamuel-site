@@ -2,14 +2,14 @@ import {getGenericSocialImage} from '~/images'
 
 export function getSocialMetas({
   url,
-  title = 'Helping people make the world a better place through quality software',
-  description = 'Make the world better with software',
+  title = 'Helping people to realize their full potential and contribute to a more positive future for all of us',
+  description = 'Make the world better by helping people make the right choices',
   origin,
   image = getGenericSocialImage({
     origin,
     url,
     words: title,
-    featuredImage: 'withsammy.com/illustrations/kody-flying_blue',
+    featuredImage: 'withsammy.com/',
   }),
   keywords = '',
 }: {

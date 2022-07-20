@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import * as React from 'react'
-import {Link, useLocation} from 'remix'
+import {Link, useLocation} from '@remix-run/react'
 import clsx from 'clsx'
 import {
   Menu,
@@ -324,7 +324,7 @@ function Navbar() {
             to="/"
             className="text-primary underlined block whitespace-nowrap text-2xl font-medium focus:outline-none transition"
           >
-            <h1>Sunil Samuel</h1>
+            <h1>With Sammy!</h1>
           </Link>
         </div>
 

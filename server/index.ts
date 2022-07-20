@@ -6,6 +6,10 @@ import compression from 'compression'
 import morgan from 'morgan'
 import * as Sentry from '@sentry/node'
 import {createRequestHandler} from '@remix-run/express'
+// import {
+//   createMetronomeGetLoadContext,
+//   registerMetronome,
+// } from '@metronome-sh/express'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import {installGlobals} from '@remix-run/node/globals'
 import {addCloudinaryProxies} from './cloudinary'
@@ -85,7 +89,7 @@ app.use(
       }
       // If we ever change our font (which we quite possibly never will)
       // then we'll just want to change the filename or something...
-      // Remix fingerprints its assets so we can cache forever
+      // Remix fingerprints its assets so we can cache forever  
       if (
         relativePath.startsWith('fonts') ||
         relativePath.startsWith('build')
@@ -111,6 +115,8 @@ app.use((req, res, next) => {
   next()
 })
 
+
+
 app.all(
   '*',
   MODE === 'production'
@@ -124,6 +130,7 @@ app.all(
         )
       },
 )
+
 
 const port = process.env.PORT ?? 3000
 app.listen(port, () => {
