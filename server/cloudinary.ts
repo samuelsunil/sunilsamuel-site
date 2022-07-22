@@ -43,16 +43,16 @@ function getSocialImageWithPreTitle({
   const vars = `$th_1256,$tw_2400,$gw_$tw_div_24,$gh_$th_div_12`
 
   const encodedPreTitle = doubleEncode(emojiStrip(preTitle))
-  const preTitleSection = `co_rgb:a9adc1,c_fit,g_north_west,w_$gw_mul_14,h_$gh,x_$gw_mul_1.5,y_$gh_mul_1.3,l_text:sunilvsamuel.com:Matter-Regular.woff2_50:${encodedPreTitle}`
+  const preTitleSection = `co_rgb:a9adc1,c_fit,g_north_west,w_$gw_mul_14,h_$gh,x_$gw_mul_1.5,y_$gh_mul_1.3,l_text:withsammy.com:Matter-Regular.woff2_50:${encodedPreTitle}`
 
   const encodedTitle = doubleEncode(emojiStrip(title))
-  const titleSection = `co_white,c_fit,g_north_west,w_$gw_mul_13.5,h_$gh_mul_7,x_$gw_mul_1.5,y_$gh_mul_2.3,l_text:sunilvsamuel.com:Matter-Regular.woff2_110:${encodedTitle}`
+  const titleSection = `co_white,c_fit,g_north_west,w_$gw_mul_13.5,h_$gh_mul_7,x_$gw_mul_1.5,y_$gh_mul_2.3,l_text:withsammy.com:Matter-Regular.woff2_110:${encodedTitle}`
 
   const sunilProfileSection = `c_fit,g_north_west,r_max,w_$gw_mul_4,h_$gh_mul_3,x_$gw,y_$gh_mul_8,l_sunil:profile-transparent`
-  const sunilNameSection = `co_rgb:a9adc1,c_fit,g_north_west,w_$gw_mul_5.5,h_$gh_mul_4,x_$gw_mul_4.5,y_$gh_mul_9,l_text:sunilvsamuel.com:Matter-Regular.woff2_70:Sunil%20Samuel`
+  const sunilNameSection = `co_rgb:a9adc1,c_fit,g_north_west,w_$gw_mul_5.5,h_$gh_mul_4,x_$gw_mul_4.5,y_$gh_mul_9,l_text:withsammy.com:Matter-Regular.woff2_70:Sunil%20Samuel`
 
   const encodedUrl = doubleEncode(emojiStrip(url))
-  const urlSection = `co_rgb:a9adc1,c_fit,g_north_west,w_$gw_mul_9,x_$gw_mul_4.5,y_$gh_mul_9.8,l_text:sunilvsamuel.com:Matter-Regular.woff2_40:${encodedUrl}`
+  const urlSection = `co_rgb:a9adc1,c_fit,g_north_west,w_$gw_mul_9,x_$gw_mul_4.5,y_$gh_mul_9.8,l_text:withsammy.com.com:Matter-Regular.woff2_40:${encodedUrl}`
 
   const featuredImageIsRemote = img.startsWith('http')
   const featuredImageCloudinaryId = featuredImageIsRemote
@@ -70,7 +70,7 @@ function getSocialImageWithPreTitle({
     sunilNameSection,
     urlSection,
     featuredImageSection,
-    `c_fill,w_$tw,h_$th/sunilvsamuel.com/social-background.png`,
+    `c_fill,w_$tw,h_$th/withsammy.com/social-background.png`,
   ].join('/')
 }
 
@@ -80,13 +80,13 @@ function getGenericSocialImage({words, img, url}: Record<string, unknown>) {
   const vars = `$th_1256,$tw_2400,$gw_$tw_div_24,$gh_$th_div_12`
 
   const encodedWords = doubleEncode(emojiStrip(words))
-  const primaryWordsSection = `co_white,c_fit,g_north_west,w_$gw_mul_10,h_$gh_mul_7,x_$gw_mul_1.3,y_$gh_mul_1.5,l_text:sunilvsamuel.com:Matter-Regular.woff2_110:${encodedWords}`
+  const primaryWordsSection = `co_white,c_fit,g_north_west,w_$gw_mul_10,h_$gh_mul_7,x_$gw_mul_1.3,y_$gh_mul_1.5,l_text:withsammy.com:Matter-Regular.woff2_110:${encodedWords}`
 
   const sunilProfileSection = `c_fit,g_north_west,r_max,w_$gw_mul_4,h_$gh_mul_3,x_$gw,y_$gh_mul_8,l_sunil:profile-transparent`
-  const sunilNameSection = `co_rgb:a9adc1,c_fit,g_north_west,w_$gw_mul_5.5,h_$gh_mul_4,x_$gw_mul_4.5,y_$gh_mul_9,l_text:sunilvsamuel.com:Matter-Regular.woff2_70:Sunil%20Samuel`
+  const sunilNameSection = `co_rgb:a9adc1,c_fit,g_north_west,w_$gw_mul_5.5,h_$gh_mul_4,x_$gw_mul_4.5,y_$gh_mul_9,l_text:withsammy.com:Matter-Regular.woff2_70:Sunil%20Samuel`
 
   const encodedUrl = doubleEncode(emojiStrip(url))
-  const urlSection = `co_rgb:a9adc1,c_fit,g_north_west,w_$gw_mul_5.5,x_$gw_mul_4.5,y_$gh_mul_9.8,l_text:sunilvsamuel.com:Matter-Regular.woff2_40:${encodedUrl}`
+  const urlSection = `co_rgb:a9adc1,c_fit,g_north_west,w_$gw_mul_5.5,x_$gw_mul_4.5,y_$gh_mul_9.8,l_text:withsammy.com:Matter-Regular.woff2_40:${encodedUrl}`
 
   const featuredImageIsRemote = img.startsWith('http')
   const featuredImageCloudinaryId = featuredImageIsRemote
@@ -96,7 +96,7 @@ function getGenericSocialImage({words, img, url}: Record<string, unknown>) {
 
   const featureImageSection = `c_fit,g_east,w_$gw_mul_11,h_$gh_mul_11,x_$gw,${featuredImageLayerType}${featuredImageCloudinaryId}`
 
-  const backgroundSection = `c_fill,w_$tw,h_$th/sunilvsamuel.com/social-background.png`
+  const backgroundSection = `c_fill,w_$tw,h_$th/withsammy.com/social-background.png`
   return [
     `sunilsamuel/image/upload`,
     vars,

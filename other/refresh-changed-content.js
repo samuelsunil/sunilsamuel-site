@@ -6,11 +6,11 @@ const [currentCommitSha] = process.argv.slice(2)
 
 async function go() {
   const shaInfo = await fetchJson(
-    'https://sunilvsamuel.com/refresh-commit-sha.json',
+    'https://withsammy.com/refresh-commit-sha.json',
   )
   let compareSha = shaInfo?.sha
   if (!compareSha) {
-    const buildInfo = await fetchJson('https://sunilvsamuel.com/build/info.json')
+    const buildInfo = await fetchJson('https://withsammy.com/build/info.json')
     compareSha = buildInfo.commit.sha
   }
   if (typeof compareSha !== 'string') {

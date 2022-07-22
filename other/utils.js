@@ -10,7 +10,7 @@ function postRefreshCache({
       const searchParams = new URLSearchParams()
       searchParams.set('_data', 'routes/action/refresh-cache')
       const options = {
-        hostname: 'sunilvsamuel.com',
+        hostname: 'withsammy.com',
         port: 443,
         path: `/action/refresh-cache?${searchParams.toString()}`,
         method: 'POST',

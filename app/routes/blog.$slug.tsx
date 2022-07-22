@@ -218,7 +218,7 @@ export default function MdxScreen() {
 
   const {slug} = params
   const Component = useMdxComponent(code)
-  console.log("What IS component", Component)
+
   const permalink = `${requestInfo.origin}/blog/${slug}`
 
   

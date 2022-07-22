@@ -109,7 +109,7 @@ ${guest.links.length ? `* ${guest.links.join('\n* ')}` : ''}
 
 ### Host: Sunil Samuel
 
-* Website: [sunilvsamuel.com  ](https://sunilvsamuel.com/)
+* Website: [withsammy.com  ](https://withsammy.com/)
 * Twitter: [@samuelsunil](https://twitter.com/samuelsunil)
 * GitHub: [@samuelsunil](https://github.com/samuelsunil)
         `.trim(),

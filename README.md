@@ -2,7 +2,7 @@
 ## Built on top of Remix
 - [Remix Docs](https://remix.run/docs)
 
-My Attempt at rebuilding a lightweight version (template) of sunilvsamuel.com
+My Attempt at rebuilding a lightweight version (template) of withsammy.com
 
 
 

@@ -113,7 +113,7 @@ function FourOhFour({articles}: {articles?: Array<MdxListItem>}) {
       articles={articles}
       heroProps={{
         title: "404 - Oh no, you found a page that's missing stuff.",
-        subtitle: `"${pathname}" is not a page on sunilvsamuel.com. So sorry.`,
+        subtitle: `"${pathname}" is not a page on withsammy.com. So sorry.`,
       //  image: <MissingSomething className="rounded-lg" aspectRatio="3:4" />,
       }}
     />

@@ -214,7 +214,7 @@ function getDisplayUrl(requestInfo?: {origin: string; path: string}) {
 
 function getUrl(requestInfo?: {origin: string; path: string}) {
   return removeTrailingSlash(
-    `${requestInfo?.origin ?? 'https://sunilvsamuel.com'}${
+    `${requestInfo?.origin ?? 'https://withsammy.com'}${
       requestInfo?.path ?? ''
     }`,
   )

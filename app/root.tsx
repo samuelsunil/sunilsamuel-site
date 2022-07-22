@@ -302,7 +302,7 @@ export function CatchBoundary() {
           <ErrorPage
             heroProps={{
               title: "404 - Oh no, you found a page that's missing stuff.",
-              subtitle: `"${location.pathname}" is not a page on sunilvsamuel.com. So sorry.`,
+              subtitle: `"${location.pathname}" is not a page on withsammy.com. So sorry.`,
              // image: (
            //     <MissingSomething className="rounded-lg" aspectRatio="3:4" />
             //  ),
