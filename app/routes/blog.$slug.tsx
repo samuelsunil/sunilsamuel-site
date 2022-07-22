@@ -1,6 +1,7 @@
 import * as React from 'react'
 import {useLoaderData, useCatch, useParams} from '@remix-run/react'
-import type {HeadersFunction, json} from '@remix-run/node'
+import type {HeadersFunction} from '@remix-run/node'
+import  { json} from '@remix-run/node'
 import type {
   SVSAction,
   SVSHandle,
