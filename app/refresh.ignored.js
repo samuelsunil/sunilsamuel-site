@@ -1,1 +1,1 @@
-// 1656050021447: /Users/sunilsamuel/GIT/sunilsamuel-site/content/blog/new-post.mdx
+// 1658555057327: /Users/sunilsamuel/GIT/sunilsamuel-site/content/blog/inner-critic-vs-inner-mentor.mdx
