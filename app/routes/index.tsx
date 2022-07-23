@@ -75,15 +75,14 @@ export default function IndexRoute() {
 
       <main>
         <IntroductionSection />
-        <Spacer size="lg" />
+        {/* <Spacer size="lg" /> */}
        
         {/* <BlogSection
           articles={data.blogRecommendations}
           title="Blog recommendations"
           description="Prepared especially for you."
         /> */}
-        <Spacer size="lg" />
-        <Spacer size="lg" />
+
         {/* <AboutSection /> */}
       </main>
     </div>

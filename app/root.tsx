@@ -43,6 +43,7 @@ import proseStyles from '~/styles/prose.css'
 // import noScriptStyles from './styles/no-script.css'
 import {ErrorPage} from './components/errors'
 import {Navbar} from './components/navbar'
+import {Footer} from './components/footer'
 import type { SVSHandle, } from '~/types'
 import {getSocialMetas} from './utils/seo'
 import {getGenericSocialImage} from './images'
@@ -207,7 +208,10 @@ export const links: LinksFunction = () => {
 
 export  function App() {
   const [theme] = useTheme();
-
+  const matches = useMatches()
+  const shouldRestoreScroll = matches.every(
+    match => (match.handle )?.restoreScroll !== false,
+  )
   return (
     <html lang="en"   className={clsx(theme, `set-color-team-current-blue`)} >
       <head>
@@ -225,7 +229,8 @@ export  function App() {
         <Navbar />
         <Outlet />
         <Spacer size="base" />
-        <ScrollRestoration />
+        {shouldRestoreScroll ? <ScrollRestoration /> : null}
+        <Footer  />
         <Scripts />
         {/* <script
           dangerouslySetInnerHTML={{
