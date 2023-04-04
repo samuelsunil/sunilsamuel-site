@@ -2,6 +2,7 @@
 ## Built on top of Remix
 - [Remix Docs](https://remix.run/docs)
 
+[![CodeQL](https://github.com/samuelsunil/sunilsamuel-site/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/samuelsunil/sunilsamuel-site/actions/workflows/codeql-analysis.yml)
 My Attempt at rebuilding a lightweight version (template) of withsammy.com
 
 
